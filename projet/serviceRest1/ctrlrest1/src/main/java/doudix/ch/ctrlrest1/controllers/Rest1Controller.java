@@ -40,7 +40,6 @@ public class Rest1Controller {
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
-    
 
     @PostMapping("/addPost")
     public ResponseEntity<Post> addPost(@RequestParam String content) {
