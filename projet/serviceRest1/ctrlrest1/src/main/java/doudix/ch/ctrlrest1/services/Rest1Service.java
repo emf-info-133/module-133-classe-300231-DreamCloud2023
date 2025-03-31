@@ -20,11 +20,7 @@ public class Rest1Service {
     private MessageRepository messageRepository;
 
     public User login(String username, String password) {
-        return userRepository.findAll()
-                .stream()
-                .filter(u -> u.getUsername().equals(username) && u.getPassword().equals(password))
-                .findFirst()
-                .orElse(null);
+        return userRepository.findByUsernameAndPassword(username, password).orElse(null);
     }
 
     public void logout() {

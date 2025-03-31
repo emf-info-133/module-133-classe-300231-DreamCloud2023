@@ -7,13 +7,15 @@ import doudix.ch.ctrlrest1.models.Post;
 import doudix.ch.ctrlrest1.models.User;
 import doudix.ch.ctrlrest1.services.Rest1Service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api/rest1")
 public class Rest1Controller {
 
-    Rest1Service service = new Rest1Service();
+    @Autowired
+    private Rest1Service service;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {

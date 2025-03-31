@@ -8,8 +8,8 @@
         <version>3.4.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>ex5</artifactId>
+    <groupId>doudix.ch</groupId>
+    <artifactId>restCtrl1</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ex5</name>
     <description>Demo project for Spring Boot</description>
