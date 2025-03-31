@@ -94,10 +94,12 @@ input:focus {
 
 /* Logo */
 .logo {
-    margin-top: 20px;
-    width: 100px;
+    width: 300px;
+    height: auto;
+    margin-top: 50px;
     animation: floatLogo 2s ease-in-out infinite alternate;
 }
+
 
 /* Bouton login spécifique */
 .left-panel .btn {
@@ -200,6 +202,6 @@ input:focus {
         transform: translateY(0px);
     }
     to {
-        transform: translateY(-10px);
+        transform: translateY(-5px);
     }
 }
