@@ -20,12 +20,30 @@ public class Rest1Service {
     private MessageRepository messageRepository;
 
     public User login(String username, String password) {
-        return userRepository.findByUsernameAndPassword(username, password).orElse(null);
+        User user = userRepository.findByUsername(username);
+        //Verification
+        System.out.println("Utilisateur trouvé : " + user);
+        System.out.println("Mot de passe en base : " + user.getPassword());
+        System.out.println("Mot de passe reçu : " + password);
+
+    if (user != null && user.getPassword().equals(password)) {
+        return user;
+    }
+    return null;
     }
 
     public void logout() {
         System.out.println("User logged out");
     }
+
+    public User addUser(User user) {
+            if (userRepository.findByUsername(user.getUsername()) != null) {
+            throw new RuntimeException("User already exists");
+        }
+        return userRepository.save(user);
+    }
+
+    
 
     public Post addPost(String content) {
         Post post = new Post();

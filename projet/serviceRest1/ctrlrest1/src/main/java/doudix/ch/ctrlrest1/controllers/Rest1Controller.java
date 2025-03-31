@@ -16,17 +16,29 @@ public class Rest1Controller {
 
     @Autowired
     private Rest1Service service;
+    
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
-        User user = service.login(username, password);
-        return (user != null) ? ResponseEntity.ok("Login successful") : ResponseEntity.status(401).body("Invalid credentials");
+    public ResponseEntity<String> login(@RequestBody User ImportedUser) {
+    User user = service.login(ImportedUser.getUsername(), ImportedUser.getPassword());
+    return (user != null) ? ResponseEntity.ok("Login successful") : ResponseEntity.status(401).body("Invalid credentials");
     }
+
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
         service.logout();
         return ResponseEntity.ok("Logged out");
+    }
+
+    @PostMapping("/addUser")
+    public ResponseEntity<String> addUser(@RequestBody User user) {
+        try {
+            service.addUser(user);
+            return ResponseEntity.ok("User added successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
 
     @PostMapping("/addPost")
@@ -45,9 +57,5 @@ public class Rest1Controller {
         return ResponseEntity.ok("Post deleted");
     }
 
-    @DeleteMapping("/deleteUsers/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        service.deleteUser(id);
-        return ResponseEntity.ok("User deleted");
-    }
+    
 }
