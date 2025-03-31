@@ -1,0 +1,205 @@
+/* General styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+input {
+    width: 250px;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+}
+
+/* Boutons généraux */
+.btn, .btn-link {
+    padding: 10px 24px;
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 6px;
+    text-decoration: none;
+    color: black;
+    text-align: center;
+    display: inline-block;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.btn:hover,
+.btn-link:hover {
+    background-color: #d6d6d6;
+    transform: scale(1.08);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Login page */
+.login-body {
+    display: flex;
+    height: 100vh;
+}
+
+.login-container {
+    display: flex;
+    width: 100%;
+    background: linear-gradient(to right, #ffffff 50%, #A4D792 50%);
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.05);
+}
+
+/* Panels */
+.left-panel, .right-panel {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.left-panel {
+    background-color: white;
+}
+
+.right-panel {
+    background-color: #A4D792;
+}
+
+.left-panel h2,
+.right-panel h2,
+.register-container h2 {
+    font-size: 40px;
+    font-weight: bold;
+}
+
+/* Inputs à gauche (login) */
+.left-panel input {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    transition: 0.3s ease;
+}
+
+.left-panel input:focus {
+    border-color: #4CAF50;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+/* Logo */
+.logo {
+    margin-top: 20px;
+    width: 100px;
+    animation: floatLogo 2s ease-in-out infinite alternate;
+}
+
+/* Bouton login spécifique */
+.left-panel .btn {
+    margin-top: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    font-weight: bold;
+}
+
+.left-panel .btn:hover {
+    background-color: #45a049;
+    transform: scale(1.08);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+/* Register page */
+.register-body {
+    background-color: #A4D792;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.register-container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    animation: slideUp 1s ease forwards;
+    transform: translateY(30px);
+    opacity: 0;
+}
+
+.register-container h2 {
+    margin-bottom: 20px;
+    font-size: 40px;
+    color: #333;
+}
+
+.register-container input {
+    display: block;
+    width: 250px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.register-container input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 6px rgba(76, 175, 80, 0.5);
+    background-color: #fff;
+}
+
+/* Bouton register dynamique */
+.register-container .btn {
+    margin-top: 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    font-weight: bold;
+}
+
+.register-container .btn:hover {
+    background-color: #45a049;
+    transform: scale(1.08);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes floatLogo {
+    from {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(-10px);
+    }
+}
