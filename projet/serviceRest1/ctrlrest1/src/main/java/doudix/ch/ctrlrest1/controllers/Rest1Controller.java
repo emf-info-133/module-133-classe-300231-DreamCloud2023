@@ -7,6 +7,8 @@ import doudix.ch.ctrlrest1.models.Post;
 import doudix.ch.ctrlrest1.models.User;
 import doudix.ch.ctrlrest1.services.Rest1Service;
 
+import java.math.BigInteger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
@@ -16,14 +18,13 @@ public class Rest1Controller {
 
     @Autowired
     private Rest1Service service;
-    
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User ImportedUser) {
-    User user = service.login(ImportedUser.getUsername(), ImportedUser.getPassword());
-    return (user != null) ? ResponseEntity.ok("Login successful") : ResponseEntity.status(401).body("Invalid credentials");
+        User user = service.login(ImportedUser.getUsername(), ImportedUser.getPassword());
+        return (user != null) ? ResponseEntity.ok("Login successful")
+                : ResponseEntity.status(401).body("Invalid credentials");
     }
-
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
@@ -42,8 +43,13 @@ public class Rest1Controller {
     }
 
     @PostMapping("/addPost")
-    public ResponseEntity<Post> addPost(@RequestParam String content) {
-        return ResponseEntity.ok(service.addPost(content));
+    public ResponseEntity<Post> addPost(
+            @RequestParam Long creator_id,
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam String imgUrl) {
+        BigInteger creatorIdBig = BigInteger.valueOf(creator_id);
+        return ResponseEntity.ok(service.addPost(creatorIdBig, title, description, imgUrl));
     }
 
     @PostMapping("/addMsg")
@@ -57,5 +63,4 @@ public class Rest1Controller {
         return ResponseEntity.ok("Post deleted");
     }
 
-    
 }
