@@ -73,11 +73,4 @@ public class Rest1Service {
         return messageRepository.save(msg);
     }
 
-    public void deletePost(Long id) {
-        postRepository.deleteById(id);
-    }
-
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
-    }
 }

@@ -64,10 +64,5 @@ public class Rest1Controller {
         return ResponseEntity.ok(message);
     }
 
-    @DeleteMapping("/deletePost/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable Long id) {
-        service.deletePost(id);
-        return ResponseEntity.ok("Post deleted");
-    }
 
 }
