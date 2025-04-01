@@ -67,17 +67,10 @@ public class Rest1Service {
         
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post non trouvé avec l'ID : " + postId));
-    
+        
         msg.setPost(post);
         
         return messageRepository.save(msg);
     }
 
-    public void deletePost(Long id) {
-        postRepository.deleteById(id);
-    }
-
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
-    }
 }
