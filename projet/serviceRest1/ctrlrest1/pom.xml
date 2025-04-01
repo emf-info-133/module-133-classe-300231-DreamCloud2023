@@ -11,7 +11,7 @@
     <groupId>doudix.ch</groupId>
     <artifactId>restCtrl1</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ex5</name>
+    <name>restCtrl1</name>
     <description>Demo project for Spring Boot</description>
     <url/>
     <licenses>

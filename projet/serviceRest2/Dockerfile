@@ -7,13 +7,13 @@ WORKDIR /app
 RUN apk update && apk add maven
 
 # Copier le fichier pom.xml pour télécharger les dépendances
-COPY ctrlrest1/pom.xml /app/pom.xml
+COPY ctrlrest2/pom.xml /app/pom.xml
 
 # Télécharger les dépendances Maven sans lancer le build (permet d'éviter de re-télécharger les dépendances à chaque build)
 RUN mvn dependency:go-offline
 
 # Copier le code source de l'application dans le container
-COPY ctrlrest1/src /app/src
+COPY ctrlrest2/src /app/src
 
 # Construire le fichier .jar à partir du projet
 RUN mvn clean package -DskipTests
@@ -25,10 +25,10 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copier le fichier .jar de l'étape de build vers le répertoire courant
-COPY --from=build /app/target/restCtrl1-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY --from=build /app/target/ctrlRest2-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # Exposer le port sur lequel l'application va écouter
-EXPOSE 8081
+EXPOSE 8082
 
 # Lancer l'application avec les options nécessaires
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
