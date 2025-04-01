@@ -1,46 +1,48 @@
 package doudix.ch.ctrlrest2.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 public class Post {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
+    private Long id;
 
-    private String title;  // Assure-toi que cet attribut existe
+    @Column(nullable = false)
+    private Long creatorId;
 
-    private String creatorId;
-    private String imageUrl;
     private String description;
+    private String imageUrl;
+    private String title;
 
-    // Getters et setters
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)  // Cascade pour supprimer les messages associés
+    private List<Message> messages;
 
-    public Long getPostId() {
-        return postId;
+    // Getters et Setters
+    public Long getId() {
+        return id;
     }
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCreatorId() {
+    public Long getCreatorId() {
         return creatorId;
     }
 
-    public void setCreatorId(String creatorId) {
+    public void setCreatorId(Long creatorId) {
         this.creatorId = creatorId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getImageUrl() {
@@ -51,12 +53,19 @@ public class Post {
         this.imageUrl = imageUrl;
     }
 
-    public String getDescription() {
-        return description;
+    public String getTitle() {
+        return title;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 }
-
