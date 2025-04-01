@@ -1,7 +1,6 @@
 package doudix.ch.ctrlrest1.models;
 
 import java.math.BigInteger;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,11 +12,12 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
 
-    private String title;  // Assure-toi que cet attribut existe
-
+    private String title;  
     private BigInteger creatorId;
     private String imageUrl;
     private String description;
+    private String category;  // Nouveau champ catégorie
+    private String couleur;   // Nouveau champ couleur
 
     // Getters et setters
 
@@ -41,8 +41,8 @@ public class Post {
         return creatorId;
     }
 
-    public void setCreatorId(BigInteger creatorId2) {
-        this.creatorId = creatorId2;
+    public void setCreatorId(BigInteger creatorId) {
+        this.creatorId = creatorId;
     }
 
     public String getImageUrl() {
@@ -60,5 +60,20 @@ public class Post {
     public void setDescription(String description) {
         this.description = description;
     }
-}
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCouleur() {
+        return couleur;
+    }
+
+    public void setCouleur(String couleur) {
+        this.couleur = couleur;
+    }
+}

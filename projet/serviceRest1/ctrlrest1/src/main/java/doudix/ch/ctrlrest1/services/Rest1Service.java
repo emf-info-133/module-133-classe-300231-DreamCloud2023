@@ -45,12 +45,14 @@ public class Rest1Service {
         return userRepository.save(user);
     }
 
-    public Post addPost(BigInteger creatorId, String title, String description, String imgUrl) {
+    public Post addPost(BigInteger creatorId, String title, String description, String imgUrl, String categorie, String couleur) {
         Post post = new Post();
         post.setCreatorId(creatorId);
         post.setTitle(title);
         post.setDescription(description);
         post.setImageUrl(imgUrl);
+        post.setCategory(categorie);
+        post.setCouleur(couleur);
 
         Post savedPost = postRepository.save(post);
         System.out.println("Post enregistré: " + savedPost);
@@ -58,9 +60,16 @@ public class Rest1Service {
         return savedPost;
     }
 
-    public Message addMessage(String content) {
+    public Message addMessage(String text, Long creatorId, Long postId) {
         Message msg = new Message();
-        msg.setContent(content);
+        msg.setText(text);
+        msg.setCreatorId(creatorId);
+        
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post non trouvé avec l'ID : " + postId));
+    
+        msg.setPost(post);
+        
         return messageRepository.save(msg);
     }
 

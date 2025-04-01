@@ -47,14 +47,21 @@ public class Rest1Controller {
             @RequestParam Long creator_id,
             @RequestParam String title,
             @RequestParam String description,
-            @RequestParam String imgUrl) {
+            @RequestParam String imgUrl,
+            @RequestParam String categorie,
+            @RequestParam String couleur) {
         BigInteger creatorIdBig = BigInteger.valueOf(creator_id);
-        return ResponseEntity.ok(service.addPost(creatorIdBig, title, description, imgUrl));
+        return ResponseEntity.ok(service.addPost(creatorIdBig, title, description, imgUrl, categorie, couleur));
     }
 
     @PostMapping("/addMsg")
-    public ResponseEntity<Message> addMessage(@RequestParam String content) {
-        return ResponseEntity.ok(service.addMessage(content));
+    public ResponseEntity<Message> addMessage(
+            @RequestParam String text,
+            @RequestParam Long creatorId,
+            @RequestParam Long postId) {
+
+        Message message = service.addMessage(text, creatorId, postId);
+        return ResponseEntity.ok(message);
     }
 
     @DeleteMapping("/deletePost/{id}")
