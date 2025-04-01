@@ -67,7 +67,7 @@ public class Rest1Service {
         
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post non trouvé avec l'ID : " + postId));
-    
+        
         msg.setPost(post);
         
         return messageRepository.save(msg);
