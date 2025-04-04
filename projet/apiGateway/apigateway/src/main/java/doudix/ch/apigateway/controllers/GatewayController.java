@@ -1,23 +1,23 @@
 package doudix.ch.apigateway.controllers;
 
+import doudix.ch.apigateway.dto.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/gateway")
 public class GatewayController {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String REST1_BASE_URL = "http://localhost:8080/api/rest1";
-    private final String REST2_BASE_URL = "http://localhost:8080/api/rest2";
+    private final String REST1_BASE_URL = "http://restctrl1:8080/api/rest1";
+    private final String REST2_BASE_URL = "http://restctrl2:8080/api/rest2";
 
     // Connexion
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, String> credentials) {
+    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         String url = REST1_BASE_URL + "/login";
-        return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(credentials), String.class);
+        return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(userDTO), String.class);
     }
 
     // Déconnexion
@@ -27,33 +27,40 @@ public class GatewayController {
         return restTemplate.exchange(url, HttpMethod.POST, null, String.class);
     }
 
+    // Ajouter un utilisateur
+    @PostMapping("/addUser")
+    public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO) {
+        String url = REST1_BASE_URL + "/addUser";
+        return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(userDTO), String.class);
+    }
+
     // Ajouter un post
     @PostMapping("/addPost")
-    public ResponseEntity<String> addPost(@RequestBody Map<String, Object> postDetails) {
+    public ResponseEntity<String> addPost(@RequestBody PostDTO postDTO) {
         String url = REST1_BASE_URL + "/addPost";
-        return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(postDetails), String.class);
+        return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(postDTO), String.class);
     }
 
     // Ajouter un message
     @PostMapping("/addMsg")
-    public ResponseEntity<String> addMessage(@RequestBody Map<String, Object> messageDetails) {
+    public ResponseEntity<String> addMessage(@RequestBody MessageDTO messageDTO) {
         String url = REST1_BASE_URL + "/addMsg";
-        return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(messageDetails), String.class);
+        return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(messageDTO), String.class);
     }
 
     // Supprimer un post
     @DeleteMapping("/deletePost")
-    public ResponseEntity<String> deletePost(@RequestBody Map<String, Object> postIds) {
-        String url = REST2_BASE_URL + "/deletePosts";
-        restTemplate.exchange(url, HttpMethod.DELETE, new HttpEntity<>(postIds), String.class);
+    public ResponseEntity<String> deletePost(@RequestParam Long postId) {
+        String url = REST2_BASE_URL + "/deletePost?postId=" + postId;
+        restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
         return ResponseEntity.ok("Post deleted via gateway");
     }
 
     // Supprimer un utilisateur
     @DeleteMapping("/deleteUser")
-    public ResponseEntity<String> deleteUser(@RequestBody Map<String, String> userDetails) {
-        String url = REST2_BASE_URL + "/deleteUserByName";
-        restTemplate.exchange(url, HttpMethod.DELETE, new HttpEntity<>(userDetails), String.class);
+    public ResponseEntity<String> deleteUser(@RequestParam String username) {
+        String url = REST2_BASE_URL + "/deleteUser?username=" + username;
+        restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
         return ResponseEntity.ok("User deleted via gateway");
     }
 }

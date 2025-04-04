@@ -5,8 +5,10 @@ import doudix.ch.ctrlrest2.services.Rest2Service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import doudix.ch.ctrlrest2.dto.UserDTO;
+import doudix.ch.ctrlrest2.dto.PostDTO;
+
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/rest2")
@@ -21,9 +23,12 @@ public class Rest2Controller {
 
     // Supprimer des posts
     @DeleteMapping("/deletePosts")
-    public ResponseEntity<String> deletePosts(@RequestBody Map<String, List<Long>> postIdsMap) {
-        List<Long> postIds = postIdsMap.get("postIds");
+    public ResponseEntity<String> deletePosts(@RequestBody List<PostDTO> postDtos) {
         try {
+            // Extraction des ids des posts à supprimer depuis le DTO
+            List<Long> postIds = postDtos.stream()
+                                         .map(PostDTO::getId)
+                                         .toList();
             service.deleteMessagesAndPosts(postIds);
             return ResponseEntity.ok("Posts and associated messages deleted successfully.");
         } catch (Exception e) {
@@ -33,8 +38,8 @@ public class Rest2Controller {
 
     // Supprimer un utilisateur par nom
     @DeleteMapping("/deleteUserByName")
-    public ResponseEntity<String> deleteUser(@RequestBody Map<String, String> userDetails) {
-        String username = userDetails.get("username");
+    public ResponseEntity<String> deleteUser(@RequestBody UserDTO userDto) {
+        String username = userDto.getUsername();  // Utilisation du DTO pour récupérer le nom d'utilisateur
         boolean isDeleted = service.deleteUserByName(username);
         if (isDeleted) {
             return ResponseEntity.ok("User deleted");

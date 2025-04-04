@@ -4,12 +4,12 @@ import org.springframework.web.bind.annotation.*;
 import doudix.ch.ctrlrest1.models.Message;
 import doudix.ch.ctrlrest1.models.Post;
 import doudix.ch.ctrlrest1.models.User;
+import doudix.ch.ctrlrest1.dto.PostDTO;
+import doudix.ch.ctrlrest1.dto.UserDTO;
+import doudix.ch.ctrlrest1.dto.MessageDTO;
 import doudix.ch.ctrlrest1.services.Rest1Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-
-import java.math.BigInteger;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/rest1")
@@ -20,11 +20,8 @@ public class Rest1Controller {
 
     // Connexion
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, String> credentials) {
-        String username = credentials.get("username");
-        String password = credentials.get("password");
-
-        User user = service.login(username, password);
+    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
+        User user = service.login(userDTO.getUsername(), userDTO.getPassword());
         return (user != null) ? ResponseEntity.ok("Login successful")
                 : ResponseEntity.status(401).body("Invalid credentials");
     }
@@ -38,10 +35,10 @@ public class Rest1Controller {
 
     // Ajouter un utilisateur
     @PostMapping("/addUser")
-    public ResponseEntity<String> addUser(@RequestBody Map<String, String> userDetails) {
+    public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO) {
         User user = new User();
-        user.setUsername(userDetails.get("username"));
-        user.setPassword(userDetails.get("password"));
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(userDTO.getPassword());
         try {
             service.addUser(user);
             return ResponseEntity.ok("User added successfully");
@@ -52,26 +49,26 @@ public class Rest1Controller {
 
     // Ajouter un post
     @PostMapping("/addPost")
-    public ResponseEntity<Post> addPost(@RequestBody Map<String, Object> postDetails) {
-        BigInteger creatorIdBig = BigInteger.valueOf(Long.parseLong(postDetails.get("creator_id").toString()));
-        String title = postDetails.get("title").toString();
-        String description = postDetails.get("description").toString();
-        String imgUrl = postDetails.get("imgUrl").toString();
-        String categorie = postDetails.get("categorie").toString();
-        String couleur = postDetails.get("couleur").toString();
-
-        Post post = service.addPost(creatorIdBig, title, description, imgUrl, categorie, couleur);
+    public ResponseEntity<Post> addPost(@RequestBody PostDTO postDTO) {
+        Post post = service.addPost(
+            postDTO.getCreatorId(),
+            postDTO.getTitle(),
+            postDTO.getDescription(),
+            postDTO.getImageUrl(),  // Correspondance correcte avec le DTO
+            postDTO.getCategorie(),
+            postDTO.getCouleur()
+        );
         return ResponseEntity.ok(post);
     }
 
     // Ajouter un message
     @PostMapping("/addMsg")
-    public ResponseEntity<Message> addMessage(@RequestBody Map<String, Object> messageDetails) {
-        String text = messageDetails.get("text").toString();
-        Long creatorId = Long.parseLong(messageDetails.get("creatorId").toString());
-        Long postId = Long.parseLong(messageDetails.get("postId").toString());
-
-        Message message = service.addMessage(text, creatorId, postId);
+    public ResponseEntity<Message> addMessage(@RequestBody MessageDTO messageDTO) {
+        Message message = service.addMessage(
+            messageDTO.getText(),
+            messageDTO.getCreatorId(),
+            messageDTO.getPostId()
+        );
         return ResponseEntity.ok(message);
     }
 }
