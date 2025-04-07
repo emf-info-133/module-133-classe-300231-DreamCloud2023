@@ -69,7 +69,7 @@ public class GatewayController {
             return ResponseEntity.badRequest().body("postId is required.");
         }
 
-        String url = REST2_BASE_URL + "/deletePost?postId=" + postId;
+        String url = REST1_BASE_URL + "/deletePost?postId=" + postId;
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
@@ -82,7 +82,7 @@ public class GatewayController {
     // Supprimer un utilisateur
     @DeleteMapping("/deleteUser")
     public ResponseEntity<String> deleteUser(@RequestBody UserDTO userDto) {
-        String url = REST2_BASE_URL + "/deleteUserByName";
+        String url = REST1_BASE_URL + "/deleteUserByName";
 
         try {
             HttpHeaders headers = new HttpHeaders();

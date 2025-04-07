@@ -31,28 +31,6 @@ public class Rest2Service {
     @Autowired
     private BanissementRepository banissementRepository;
 
-    // Méthode pour supprimer les messages et les posts
-    @Transactional
-    public void deleteMessagesAndPosts(List<Long> postIds) {
-        // Supprimer d'abord les messages associés aux posts
-        List<Message> messages = messageRepository.findByPostIdIn(postIds);
-        for (Message message : messages) {
-            messageRepository.delete(message); // Suppression explicite des messages
-        }
-
-        // Ensuite, supprimer les posts
-        postRepository.deleteByIdIn(postIds);
-    }
-
-    // Méthode pour supprimer un utilisateur par son nom
-    public boolean deleteUserByName(String name) {
-        Optional<User> user = userRepository.findByUsername(name);
-        if (user.isPresent()) {
-            userRepository.delete(user.get());
-            return true;
-        }
-        return false;
-    }
 
     // Méthode pour bannir un utilisateur
     public Banissement banUser(String username, String remarque) {
