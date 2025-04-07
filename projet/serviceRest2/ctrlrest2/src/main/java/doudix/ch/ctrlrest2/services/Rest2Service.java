@@ -1,48 +1,31 @@
 package doudix.ch.ctrlrest2.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import doudix.ch.ctrlrest2.models.Banissement;
 import doudix.ch.ctrlrest2.models.BanissementRepository;
-import doudix.ch.ctrlrest2.models.Message;
-import doudix.ch.ctrlrest2.models.MessageRepository;
-import doudix.ch.ctrlrest2.models.Post;
-import doudix.ch.ctrlrest2.models.PostRepository;
-import doudix.ch.ctrlrest2.models.User;
-import doudix.ch.ctrlrest2.models.UserRepository;
-import jakarta.transaction.Transactional;
 
 @Service
 public class Rest2Service {
 
     @Autowired
-    private PostRepository postRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private MessageRepository messageRepository;
-
-    @Autowired
     private BanissementRepository banissementRepository;
 
-
-    // Méthode pour bannir un utilisateur
-    public Banissement banUser(String username, String remarque) {
-        if (username == null || username.isBlank()) {
+    // Méthode pour bannir un utilisateur avec l'objet Banissement directement
+    public Banissement banUser(Banissement banissement) {
+        // Vérification si l'objet Banissement est valide
+        if (banissement.getUsername() == null || banissement.getUsername().isBlank()) {
             throw new IllegalArgumentException("Le nom d'utilisateur ne peut pas être vide.");
         }
-        if (remarque == null || remarque.isBlank()) {
-            remarque = "Aucune remarque fournie.";
+        if (banissement.getRemarque() == null || banissement.getRemarque().isBlank()) {
+            banissement.setRemarque("Aucune remarque fournie.");
         }
-    
-        Banissement ban = new Banissement(username.trim(), remarque.trim());
-        return banissementRepository.save(ban);
+
+        // Sauvegarde dans la base de données et renvoi de l'entité
+        return banissementRepository.save(banissement);
     }
     
     // Méthode pour récupérer la liste des utilisateurs bannis

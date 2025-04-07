@@ -9,7 +9,6 @@ public class BanissementDTO {
     private String remarque;
     private LocalDateTime dateBannissement;
 
-    // Constructeurs
     public BanissementDTO() {}
 
     public BanissementDTO(Long id, String username, String remarque, LocalDateTime dateBannissement) {
@@ -19,7 +18,6 @@ public class BanissementDTO {
         this.dateBannissement = dateBannissement;
     }
 
-    // Getters et Setters
     public Long getId() {
         return id;
     }

@@ -104,12 +104,35 @@ public class GatewayController {
         }
     }
 
-    // Bannir un utilisateur
     @PostMapping("/banUser")
     public ResponseEntity<BanissementDTO> banUser(@RequestBody BanissementDTO banDto) {
-        String url = REST2_BASE_URL + "/banUser";
-        return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(banDto), BanissementDTO.class);
+        try {
+            // Préparer l'URL du service REST2
+            String url = REST2_BASE_URL + "/api/rest2/banUser"; // Assurez-vous que l'URL correspond bien à votre service REST2
+    
+            // Créer un objet Banissement à partir du DTO reçu
+            BanissementDTO banissement = new BanissementDTO(banDto.getUsername(), banDto.getRemarque());
+    
+            // Créer l'entité Http pour envoyer l'objet Banissement
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<BanissementDTO> requestEntity = new HttpEntity<>(banissement, headers);
+    
+            // Faire la requête HTTP POST vers le service REST2
+            ResponseEntity<BanissementDTO> response = restTemplate.exchange(
+                    url, 
+                    HttpMethod.POST, 
+                    requestEntity, 
+                    BanissementDTO.class);
+    
+            // Retourner la réponse obtenue
+            return response;
+        } catch (Exception e) {
+            // En cas d'erreur, retournez une réponse interne du serveur
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
+    
 
     // Récupérer tous les bannissements
     @GetMapping("/getBans")
