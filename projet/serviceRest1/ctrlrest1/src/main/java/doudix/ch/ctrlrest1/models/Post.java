@@ -3,6 +3,8 @@ package doudix.ch.ctrlrest1.models;
 import java.math.BigInteger;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +31,8 @@ public class Post {
     private String couleur;
 
     
-    @OneToMany(mappedBy = "post") 
+    @OneToMany(mappedBy = "post")
+    @JsonManagedReference
     private List<Message> messages;
 
     // Getters et setters

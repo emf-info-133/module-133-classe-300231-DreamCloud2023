@@ -3,6 +3,8 @@ package doudix.ch.ctrlrest2.models;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Post {
 
@@ -17,7 +19,8 @@ public class Post {
     private String imageUrl;
     private String title;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)  // Cascade pour supprimer les messages associés
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+     @JsonManagedReference  // Cascade pour supprimer les messages associés
     private List<Message> messages;
 
     // Getters et Setters

@@ -61,7 +61,7 @@ public class Rest1Controller {
             postDTO.getTitle(),
             postDTO.getDescription(),
             postDTO.getImageUrl(),
-            postDTO.getCategorie(),
+            postDTO.getCategory(),
             postDTO.getCouleur()
         );
         return ResponseEntity.ok(post);

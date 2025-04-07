@@ -21,20 +21,18 @@ public class Rest2Controller {
         this.service = service;
     }
 
-    // Supprimer des posts
-    @DeleteMapping("/deletePosts")
-    public ResponseEntity<String> deletePosts(@RequestBody List<PostDTO> postDtos) {
+    // Méthode pour supprimer un post selon son ID dans le service cible
+    @DeleteMapping("/deletePost")
+    public ResponseEntity<String> deletePost(@RequestParam Long postId) {
         try {
-            // Extraction des ids des posts à supprimer depuis le DTO
-            List<Long> postIds = postDtos.stream()
-                                         .map(PostDTO::getId)
-                                         .toList();
-            service.deleteMessagesAndPosts(postIds);
-            return ResponseEntity.ok("Posts and associated messages deleted successfully.");
+        // Appeler la méthode pour supprimer le post selon son ID
+            service.deleteMessagesAndPosts(List.of(postId));  // Supprimer le post et les messages associés
+            return ResponseEntity.ok("Post and associated messages deleted successfully.");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("An error occurred while deleting posts and messages.");
+            return ResponseEntity.status(500).body("An error occurred while deleting the post and messages.");
         }
     }
+
 
     // Supprimer un utilisateur par nom
     @DeleteMapping("/deleteUserByName")

@@ -3,6 +3,8 @@ package doudix.ch.ctrlrest1.models;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Message {
 
@@ -18,6 +20,7 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private Post post;
 
     @Column(nullable = false, updatable = false)
