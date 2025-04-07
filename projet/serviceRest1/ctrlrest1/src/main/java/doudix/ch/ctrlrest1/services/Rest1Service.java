@@ -1,6 +1,8 @@
 package doudix.ch.ctrlrest1.services;
 
 import java.math.BigInteger;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import doudix.ch.ctrlrest1.models.Post;
 import doudix.ch.ctrlrest1.models.PostRepository;
 import doudix.ch.ctrlrest1.models.User;
 import doudix.ch.ctrlrest1.models.UserRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class Rest1Service {
@@ -45,7 +48,8 @@ public class Rest1Service {
         return userRepository.save(user);
     }
 
-    public Post addPost(BigInteger creatorId, String title, String description, String imgUrl, String categorie, String couleur) {
+    public Post addPost(BigInteger creatorId, String title, String description, String imgUrl, String categorie,
+            String couleur) {
         Post post = new Post();
         post.setCreatorId(creatorId);
         post.setTitle(title);
@@ -64,13 +68,37 @@ public class Rest1Service {
         Message msg = new Message();
         msg.setText(text);
         msg.setCreatorId(creatorId);
-        
+
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post non trouvé avec l'ID : " + postId));
-        
+
         msg.setPost(post);
-        
+
         return messageRepository.save(msg);
+    }
+
+    // Méthode pour supprimer les messages et les posts
+    @Transactional
+    public void deleteMessagesAndPosts(List<Long> postIds) {
+        // Supprimer d'abord les messages associés aux posts
+        List<Message> messages = messageRepository.findByPostPostIdIn(postIds);
+        for (Message message : messages) {
+            messageRepository.delete(message); // Suppression explicite des messages
+        }
+
+        // Ensuite, supprimer les posts
+        postRepository.deleteByPostIdIn(postIds);
+    }
+
+    // Méthode pour supprimer un utilisateur par son nom
+    public boolean deleteUserByName(String name) {
+        User user = userRepository.findByUsername(name); // Recherche de l'utilisateur par son nom
+
+        if (user != null) { // Vérifie si l'utilisateur existe
+            userRepository.delete(user); // Supprime l'utilisateur
+            return true;
+        }
+        return false; // Si l'utilisateur n'est pas trouvé
     }
 
 }
