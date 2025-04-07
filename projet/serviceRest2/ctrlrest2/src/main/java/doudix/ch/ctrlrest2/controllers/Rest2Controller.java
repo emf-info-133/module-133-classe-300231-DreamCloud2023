@@ -7,11 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import doudix.ch.ctrlrest2.dto.UserDTO;
-import doudix.ch.ctrlrest2.models.Banissement;
 import doudix.ch.ctrlrest2.dto.BanissementDTO;
-import doudix.ch.ctrlrest2.dto.PostDTO;
+import doudix.ch.ctrlrest2.models.Banissement;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -26,11 +25,14 @@ public class Rest2Controller {
     }
 
     // Bannir un utilisateur
+    // Bannir un utilisateur
     @PostMapping("/banUser")
-    public ResponseEntity<BanissementDTO> banUser(@RequestBody BanissementDTO dto) {
+    public ResponseEntity<BanissementDTO> banUser(@RequestBody Banissement banissement) {
         try {
-            Banissement ban = service.banUser(dto.getUsername(), dto.getRemarque());
+            // On appelle le service pour bannir l'utilisateur
+            Banissement ban = service.banUser(banissement);
 
+            // Création du DTO de réponse à partir de l'objet Banissement
             BanissementDTO response = new BanissementDTO(
                     ban.getId(),
                     ban.getUsername(),

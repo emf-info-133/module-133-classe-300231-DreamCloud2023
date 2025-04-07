@@ -9,17 +9,13 @@ public class BanissementDTO {
     private String remarque;
     private LocalDateTime dateBannissement;
 
-    // Constructeurs
     public BanissementDTO() {}
 
-    public BanissementDTO(Long id, String username, String remarque, LocalDateTime dateBannissement) {
-        this.id = id;
+    public BanissementDTO(String username, String remarque) {
         this.username = username;
         this.remarque = remarque;
-        this.dateBannissement = dateBannissement;
     }
 
-    // Getters et Setters
     public Long getId() {
         return id;
     }
