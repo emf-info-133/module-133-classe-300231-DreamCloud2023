@@ -32,3 +32,7 @@ EXPOSE 8082
 
 # Lancer l'application avec les options nécessaires
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+
+# Attendre que la DB soit prête
+CMD ["sh", "-c", "sleep 10 && java -jar /app/app.jar"]
+

@@ -1,8 +1,7 @@
-
 version: "3.8"
 
 services:
-  
+
   # Service pour l'API Gateway
   apigateway:
     build:
@@ -24,7 +23,7 @@ services:
       - "8081:8080"
     environment:
       - SPRING_APPLICATION_NAME=ctrlrest1
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/rest1_database   # Utilisation du nom du service mysql
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/rest1_database
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=emf123
       - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
@@ -32,7 +31,8 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_JPA_SHOW_SQL=true
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - backend
 
@@ -44,35 +44,58 @@ services:
     ports:
       - "8083:8080"
     environment:
-      - SPRING_APPLICATION_NAME=ctrlrest2
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/rest1_database   # Utilisation du nom du service mysql
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=emf123
-      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
-      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQL8Dialect
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_JPA_SHOW_SQL=true
+      # Connexion à la deuxième base (ban_db)
+      - SPRING_BAN-DATASOURCE_URL=jdbc:mysql://ban-mysql:3306/rest2_database
+      - SPRING_BAN-DATASOURCE_USERNAME=root
+      - SPRING_BAN-DATASOURCE_PASSWORD=emf123
+      - SPRING_BAN-DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
     depends_on:
-      - mysql
+      mysql_ban:
+        condition: service_healthy
     networks:
       - backend
 
-  # Service pour la base de données MySQL
+  # Service pour la première base de données MySQL (rest1_database)
   mysql:
     image: mysql:8.0
     container_name: projet-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: emf123  # Utilisation de la variable correcte pour le mot de passe root
+      MYSQL_ROOT_PASSWORD: emf123
       MYSQL_DATABASE: rest1_database
     ports:
-      - "3309:3306"  # Port mappé entre l'hôte (3309) et le conteneur (3306)
+      - "3309:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Service pour la deuxième base de données MySQL (rest2_database)
+  mysql_ban:
+    image: mysql:8.0
+    container_name: ban-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: emf123
+      MYSQL_DATABASE: rest2_database
+    ports:
+      - "3310:3306"
+    volumes:
+      - mysql_ban_data:/var/lib/mysql
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   mysql_data:
+  mysql_ban_data:
 
 networks:
   backend:

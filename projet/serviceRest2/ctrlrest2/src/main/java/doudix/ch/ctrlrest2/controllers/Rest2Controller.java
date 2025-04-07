@@ -2,10 +2,14 @@ package doudix.ch.ctrlrest2.controllers;
 
 import org.springframework.web.bind.annotation.*;
 import doudix.ch.ctrlrest2.services.Rest2Service;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import doudix.ch.ctrlrest2.dto.UserDTO;
+import doudix.ch.ctrlrest2.models.Banissement;
+import doudix.ch.ctrlrest2.dto.BanissementDTO;
 import doudix.ch.ctrlrest2.dto.PostDTO;
 
 import java.util.List;
@@ -25,24 +29,54 @@ public class Rest2Controller {
     @DeleteMapping("/deletePost")
     public ResponseEntity<String> deletePost(@RequestParam Long postId) {
         try {
-        // Appeler la méthode pour supprimer le post selon son ID
-            service.deleteMessagesAndPosts(List.of(postId));  // Supprimer le post et les messages associés
+            // Appeler la méthode pour supprimer le post selon son ID
+            service.deleteMessagesAndPosts(List.of(postId)); // Supprimer le post et les messages associés
             return ResponseEntity.ok("Post and associated messages deleted successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("An error occurred while deleting the post and messages.");
         }
     }
 
-
     // Supprimer un utilisateur par nom
     @DeleteMapping("/deleteUserByName")
     public ResponseEntity<String> deleteUser(@RequestBody UserDTO userDto) {
-        String username = userDto.getUsername();  // Utilisation du DTO pour récupérer le nom d'utilisateur
+        String username = userDto.getUsername(); // Utilisation du DTO pour récupérer le nom d'utilisateur
         boolean isDeleted = service.deleteUserByName(username);
         if (isDeleted) {
             return ResponseEntity.ok("User deleted");
         } else {
             return ResponseEntity.status(404).body("User not found");
         }
+    }
+
+    // Bannir un utilisateur
+    @PostMapping("/banUser")
+    public ResponseEntity<BanissementDTO> banUser(@RequestBody BanissementDTO dto) {
+        try {
+            Banissement ban = service.banUser(dto.getUsername(), dto.getRemarque());
+
+            BanissementDTO response = new BanissementDTO(
+                    ban.getId(),
+                    ban.getUsername(),
+                    ban.getRemarque(),
+                    ban.getDateBannissement());
+
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    // Récupérer la liste des bannissements
+    @GetMapping("/getBans")
+    public ResponseEntity<List<BanissementDTO>> getAllBans() {
+        List<Banissement> bans = service.getAllBans();
+        List<BanissementDTO> dtos = bans.stream()
+                .map(b -> new BanissementDTO(b.getId(), b.getUsername(), b.getRemarque(), b.getDateBannissement()))
+                .toList();
+
+        return ResponseEntity.ok(dtos);
     }
 }
