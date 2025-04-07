@@ -1,26 +1,36 @@
 package doudix.ch.ctrlrest1.models;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "id")
     private Long postId;
 
-    private String title;  
     private BigInteger creatorId;
     private String imageUrl;
+    private String title;
     private String description;
-    private String category;  // Nouveau champ catégorie
-    private String couleur;   // Nouveau champ couleur
+    @Column(name = "category")
+    private String category;
+     
+    @Column(name = "couleur")
+    private String couleur;
+
+    
+    @OneToMany(mappedBy = "post") 
+    private List<Message> messages;
 
     // Getters et setters
 
@@ -78,5 +88,13 @@ public class Post {
 
     public void setCouleur(String couleur) {
         this.couleur = couleur;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 }

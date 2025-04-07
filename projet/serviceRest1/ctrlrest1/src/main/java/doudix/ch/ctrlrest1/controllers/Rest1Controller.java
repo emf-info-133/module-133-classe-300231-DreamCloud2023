@@ -18,13 +18,19 @@ public class Rest1Controller {
     @Autowired
     private Rest1Service service;
 
-    // Connexion
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
-        User user = service.login(userDTO.getUsername(), userDTO.getPassword());
-        return (user != null) ? ResponseEntity.ok("Login successful")
-                : ResponseEntity.status(401).body("Invalid credentials");
+        try {
+            User user = service.login(userDTO.getUsername(), userDTO.getPassword());
+            return (user != null) ?
+                    ResponseEntity.ok("Login successful") :
+                    ResponseEntity.status(401).body("Invalid credentials");
+        } catch (Exception e) {
+            e.printStackTrace(); // log dans les logs du conteneur
+            return ResponseEntity.status(500).body("Erreur interne: " + e.getMessage());
+        }
     }
+    
 
     // Déconnexion
     @PostMapping("/logout")
@@ -54,7 +60,7 @@ public class Rest1Controller {
             postDTO.getCreatorId(),
             postDTO.getTitle(),
             postDTO.getDescription(),
-            postDTO.getImageUrl(),  // Correspondance correcte avec le DTO
+            postDTO.getImageUrl(),
             postDTO.getCategorie(),
             postDTO.getCouleur()
         );

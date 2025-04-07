@@ -10,20 +10,20 @@ public class PostDTO {
     private String imageUrl;
     private String title;
     private List<MessageDTO> messages;
-    private String categorie;
+    private String category;
     private String couleur;
 
     // Constructeurs
     public PostDTO() {}
 
-    public PostDTO(Long id, BigInteger creatorId, String description, String imageUrl, String title, List<MessageDTO> messages, String categorie, String couleur) {
+    public PostDTO(Long id, BigInteger creatorId, String description, String imageUrl, String title, List<MessageDTO> messages, String category, String couleur) {
         this.id = id;
         this.creatorId = creatorId;
         this.description = description;
         this.imageUrl = imageUrl;
         this.title = title;
         this.messages = messages;
-        this.categorie = categorie;
+        this.category = category;
         this.couleur = couleur;
     }
 
@@ -46,8 +46,8 @@ public class PostDTO {
     public List<MessageDTO> getMessages() { return messages; }
     public void setMessages(List<MessageDTO> messages) { this.messages = messages; }
 
-    public String getCategorie() { return categorie; }
-    public void setCategorie(String categorie) { this.categorie = categorie; }
+    public String getCategorie() { return category; }
+    public void setCategorie(String category) { this.category = category; }
 
     public String getCouleur() { return couleur; }
     public void setCouleur(String couleur) { this.couleur = couleur; }
