@@ -42,7 +42,7 @@ function logout(successCallback, errorCallback) {
  */
 function addUser(user, successCallback, errorCallback) {
     $.ajax({
-        url: '/api/gateway/addUser',
+        url: 'http://localhost:8082/api/gateway/addUser',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(user),

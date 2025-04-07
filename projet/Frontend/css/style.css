@@ -263,12 +263,62 @@ body {
   .logo {
   
     width: 120px;
-  
     height: auto;
-  
-    animation: floatLogo 2s ease-in-out infinite alternate;
+    margin-top: 20px;
   
   }
+
+  /* -------------------- RESPONSIVE LOGIN / REGISTER -------------------- */
+
+@media screen and (max-width: 600px) {
+
+  .login-container,
+  .register-container {
+    width: 90% !important;
+    padding: 50px !important;
+    box-shadow: 0 19px 16px rgba(0,0,0,0.1);
+    border-radius: 12px;
+  }
+
+  .login-container {
+    flex-direction: column;
+    background: white;
+  }
+
+  .left-panel, .right-panel {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .left-panel h2,
+  .right-panel h2,
+  .register-container h2 {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .left-panel input,
+  .register-container input {
+    width: 100%;
+  }
+
+  .left-panel .btn,
+  .register-container .btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+  }
+
+  .logo {
+    width: 200px;
+    margin-bottom: 10px;
+  }
+
+  .register-body,
+  .login-body {
+    padding: 20px;
+  }
+}
    
   /* -------------------- TOPBAR + SIDEBAR (HOME / POST) -------------------- */
   
@@ -292,8 +342,7 @@ body {
    
   .logo img {
   
-    width: 200px;
-  
+    width: 200px;  
   }
    
   .search-bar input {
@@ -737,13 +786,6 @@ body {
     to { transform: translateY(0); opacity: 1; }
   
   }
-   
-  @keyframes floatLogo {
-  
-    from { transform: translateY(0px); }
-  
-    to { transform: translateY(-5px); }
-  
-  }
+
   
    
