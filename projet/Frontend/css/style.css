@@ -99,6 +99,30 @@ body {
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   
   }
+
+  .logoutButton {
+    margin-left: 10px;
+    padding: 8px 14px;
+    background-color: #ff5252;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .logoutButton:hover {
+    background-color: #e04848;
+    transform: scale(1.05);
+  }
+  
+  .topbar .user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
    
   /* -------------------- LOGIN / REGISTER -------------------- */
   

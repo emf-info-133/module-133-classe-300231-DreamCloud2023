@@ -4,7 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Doudix - Home</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/projet/Frontend/javascript/services/servicesHttp.js"></script>
+  <script src="/projet/Frontend/javascript/controllers/logoutCtrl.js"></script>
   <link rel="stylesheet" href="/projet/Frontend/css/style.css">
+  <script>
+    $(document).ready(function () {
+      // Redirection si l'utilisateur n'est pas connecté
+      if (!sessionStorage.getItem("loggedUser")) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      // Affiche dynamiquement le nom d'utilisateur
+      $("#logged-username").text(sessionStorage.getItem("loggedUser"));
+    });
+  </script>
 </head>
 <body>
   <header class="topbar">
@@ -15,8 +30,9 @@
       <input type="text" placeholder="Search">
     </div>
     <div class="user-info">
-      <span>User125</span>
+      <span id="logged-username"></span>
       <img src="https://kazanjiana.emf-informatique.ch/133-Ressource/account-icon-sign-symbol-logo-design-free-vector.jpg" alt="User Icon">
+      <button id="logoutButton" class="logoutButton">Logout</button>
     </div>
   </header>
 

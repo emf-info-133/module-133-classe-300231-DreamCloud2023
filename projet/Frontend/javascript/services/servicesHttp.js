@@ -9,7 +9,7 @@
  */
 function login(loginInfo, successCallback, errorCallback) {
     $.ajax({
-        url: 'http://localhost:8080/api/gateway/login',
+        url: 'http://localhost:8082/api/gateway/login',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(loginInfo),
@@ -17,6 +17,7 @@ function login(loginInfo, successCallback, errorCallback) {
         error: errorCallback
     });
 }
+
 
 /**
  * Méthode permettant de se déconnecter
