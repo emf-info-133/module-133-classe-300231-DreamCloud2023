@@ -2,6 +2,18 @@ $(document).ready(function () {
   // Affiche le nom de l'utilisateur connecté
   $("#logged-username").text(sessionStorage.getItem("loggedUser"));
 
+  // Affichage dynamique de l'image sélectionnée (prévisualisation)
+  $("#image").on("change", function () {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        $("#image-preview").attr("src", e.target.result).show();
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
   // Lors du clic sur "Add Post"
   $(".btn:contains('Add Post')").on("click", function (event) {
     event.preventDefault();
@@ -11,35 +23,48 @@ $(document).ready(function () {
     const description = $("#desc").val().trim();
     const category = $("#category").val();
     const color = $("#color").val();
-    const imageUrl = "https://kazanjiana.emf-informatique.ch/133-Ressource/image.jpg"; // Image fixe par défaut
+    const imageFile = $("#image")[0].files[0];
 
-    // Vérification des champs
+    // Vérification des champs obligatoires
     if (!username || !title || !description || !category || !color) {
-      alert("Merci de remplir tous les champs !");
+      alert("Merci de remplir tous les champs obligatoires !");
       return;
     }
 
-    // Récupère l'utilisateur via son nom
-    getUserByUsername(username, function (user) {
-      const post = {
-        creatorId: user.id, // ← utilise bien l'ID récupéré
-        title: title,
-        description: description,
-        category: category,
-        couleur: color,
-        imageUrl: imageUrl
-      };
+    const sendPost = (imageBase64) => {
+      getUserByUsername(username, function (user) {
+        const post = {
+          creatorId: user.id,
+          title: title,
+          description: description,
+          category: category,
+          couleur: color,
+          imageUrl: imageBase64 || "" // image optionnelle
+        };
 
-      // Envoi vers la Gateway via port 8082
-      addPost(post, function () {
-        alert("Post créé avec succès !");
-        window.location.href = "home.html";
-      }, function (xhr) {
-        alert("Erreur lors de la création du post : " + xhr.responseText);
+        addPost(post, function () {
+          alert("Post créé avec succès !");
+          window.location.href = "home.html";
+        }, function (xhr) {
+          alert("Erreur lors de la création du post : " + xhr.responseText);
+        });
+
+      }, function () {
+        alert("Erreur lors de la récupération de l'utilisateur !");
       });
+    };
 
-    }, function () {
-      alert("Erreur lors de la récupération de l'utilisateur !");
-    });
+    // Si une image est présente → lire le fichier
+    if (imageFile) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const imageBase64 = e.target.result;
+        sendPost(imageBase64);
+      };
+      reader.readAsDataURL(imageFile);
+    } else {
+      // Pas d’image sélectionnée
+      sendPost("");
+    }
   });
 });

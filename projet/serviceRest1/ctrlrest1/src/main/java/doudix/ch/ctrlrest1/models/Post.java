@@ -21,16 +21,17 @@ public class Post {
     private Long postId;
 
     private BigInteger creatorId;
+
+    @Column(name = "imageUrl", columnDefinition = "LONGTEXT")
     private String imageUrl;
     private String title;
     private String description;
     @Column(name = "category")
     private String category;
-     
+
     @Column(name = "couleur")
     private String couleur;
 
-    
     @OneToMany(mappedBy = "post")
     @JsonManagedReference
     private List<Message> messages;

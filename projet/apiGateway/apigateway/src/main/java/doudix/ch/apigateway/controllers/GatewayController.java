@@ -55,18 +55,24 @@ public class GatewayController {
 
     @GetMapping("/getUser/{username}")
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
-        String url = REST1_BASE_URL + "/user/" + username;
-
         try {
-            return restTemplate.exchange(
-                    url,
-                    HttpMethod.GET,
-                    null,
-                    UserDTO.class);
+            String url = REST1_BASE_URL + "/getUser/" + username;
+            return restTemplate.exchange(url, HttpMethod.GET, null, UserDTO.class);
         } catch (Exception e) {
-            e.printStackTrace(); // Pour voir l'erreur côté Gateway
-            return ResponseEntity.status(500).body(null);
+            e.printStackTrace(); // ← Voir la console Docker du gateway
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+    }
+
+    @GetMapping("/getPosts")
+    public ResponseEntity<List<PostDTO>> getAllPosts() {
+        String url = REST1_BASE_URL + "/getPosts";
+        return restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<PostDTO>>() {
+                });
     }
 
     // Ajouter un message
@@ -123,8 +129,9 @@ public class GatewayController {
     public ResponseEntity<BanissementDTO> banUser(@RequestBody BanissementDTO banDto) {
         try {
             // Préparer l'URL du service REST2
-            String url = REST2_BASE_URL + "/api/rest2/banUser"; // Assurez-vous que l'URL correspond bien à votre service REST2
-    
+            String url = REST2_BASE_URL + "/api/rest2/banUser"; // Assurez-vous que l'URL correspond bien à votre
+                                                                // service REST2
+
             // Créer un objet Banissement à partir du DTO reçu
             BanissementDTO banissement = new BanissementDTO(banDto.getUsername(), banDto.getRemarque());
 

@@ -86,6 +86,16 @@ function getUserByUsername(username, successCallback, errorCallback) {
     });
 }
 
+function getAllPosts(successCallback, errorCallback) {
+    $.ajax({
+        url: 'http://localhost:8082/api/gateway/getPosts',
+        type: 'GET',
+        success: successCallback,
+        error: errorCallback
+    });
+}
+
+
 
 /**
  * Méthode permettant d'ajouter un message

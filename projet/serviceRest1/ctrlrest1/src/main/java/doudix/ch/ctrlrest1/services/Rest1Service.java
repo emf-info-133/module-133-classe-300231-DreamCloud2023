@@ -65,10 +65,13 @@ public class Rest1Service {
     }
 
     public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username); 
+        return userRepository.findByUsername(username);
     }
-    
-    
+
+    public List<Post> getAllPosts() {
+        return postRepository.findAll();
+    }
+
     public Message addMessage(String text, Long creatorId, Long postId) {
         Message msg = new Message();
         msg.setText(text);

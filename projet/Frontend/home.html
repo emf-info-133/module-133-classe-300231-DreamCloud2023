@@ -7,19 +7,8 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="/projet/Frontend/javascript/services/servicesHttp.js"></script>
   <script src="/projet/Frontend/javascript/controllers/logoutCtrl.js"></script>
+  <script src="/projet/Frontend/javascript/controllers/homeCtrl.js"></script>
   <link rel="stylesheet" href="/projet/Frontend/css/style.css">
-  <script>
-    $(document).ready(function () {
-      // Redirection si l'utilisateur n'est pas connecté
-      if (!sessionStorage.getItem("loggedUser")) {
-        window.location.href = "login.html";
-        return;
-      }
-
-      // Affiche dynamiquement le nom d'utilisateur
-      $("#logged-username").text(sessionStorage.getItem("loggedUser"));
-    });
-  </script>
 </head>
 <body>
   <header class="topbar">
@@ -39,6 +28,7 @@
   <main class="container">
     <aside class="sidebar">
       <a href="post.html" class="btn">+ Add Post</a>
+      <button id="resetFilter" class="btn reset-btn">🔄 Reset Filter</button>
       <ul>
         <li>Gaming</li>
         <li>Food</li>
@@ -58,33 +48,8 @@
       </ul>
     </aside>
 
-    <section class="post-list">
-      <a href="discussion.html" class="post blue">
-        <div class="thumbnail">📘</div>
-        <div class="details">
-          <h3>How to do maths ?</h3>
-          <p>Description</p>
-        </div>
-        <div class="author">By User1235</div>
-      </a>
-
-      <a href="discussion.html" class="post green">
-        <div class="thumbnail">🎬</div>
-        <div class="details">
-          <h3>The best films of 2025 !</h3>
-          <p>Description</p>
-        </div>
-        <div class="author">By User12325</div>
-      </a>
-
-      <a href="discussion.html" class="post yellow">
-        <div class="thumbnail">🍽️</div>
-        <div class="details">
-          <h3>Look at my new recipe !</h3>
-          <p>Description</p>
-        </div>
-        <div class="author">By User1235</div>
-      </a>
+    <section class="post-list" id="post-list">
+      <!-- Les posts seront ajoutés dynamiquement ici -->
     </section>
   </main>
 </body>

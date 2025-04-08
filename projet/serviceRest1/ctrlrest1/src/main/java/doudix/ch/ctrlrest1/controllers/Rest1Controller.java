@@ -67,6 +67,21 @@ public class Rest1Controller {
         return ResponseEntity.ok(post);
     }
 
+    @GetMapping("/getUser/{username}")
+    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
+        User user = service.getUserByUsername(username);
+        if (user != null) {
+            return ResponseEntity.ok(new UserDTO(user.getId(), user.getUsername(), user.getPassword()));
+        } else {
+            return ResponseEntity.status(404).body(null);
+        }
+    }
+
+    @GetMapping("/getPosts")
+    public ResponseEntity<List<Post>> getAllPosts() {
+        List<Post> posts = service.getAllPosts();
+        return ResponseEntity.ok(posts);
+    }
 
     // Ajouter un message
     @PostMapping("/addMsg")
