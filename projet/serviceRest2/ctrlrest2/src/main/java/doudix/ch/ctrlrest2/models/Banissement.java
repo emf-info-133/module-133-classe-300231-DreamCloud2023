@@ -18,7 +18,6 @@ public class Banissement {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String remarque;
 
-    @Column(nullable = false)
     private LocalDateTime dateBannissement;
 
     public Banissement() {}

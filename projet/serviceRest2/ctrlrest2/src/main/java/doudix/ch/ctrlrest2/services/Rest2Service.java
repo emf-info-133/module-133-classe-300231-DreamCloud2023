@@ -16,16 +16,23 @@ public class Rest2Service {
 
     // Méthode pour bannir un utilisateur avec l'objet Banissement directement
     public Banissement banUser(Banissement banissement) {
+        System.out.println("Check1-Rest2");
         // Vérification si l'objet Banissement est valide
         if (banissement.getUsername() == null || banissement.getUsername().isBlank()) {
             throw new IllegalArgumentException("Le nom d'utilisateur ne peut pas être vide.");
         }
+        System.out.println("Check2-Rest2");
         if (banissement.getRemarque() == null || banissement.getRemarque().isBlank()) {
             banissement.setRemarque("Aucune remarque fournie.");
         }
-
-        // Sauvegarde dans la base de données et renvoi de l'entité
-        return banissementRepository.save(banissement);
+        System.out.println("Check3-Rest2");
+        try {
+            return banissementRepository.save(banissement);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new IllegalArgumentException(e.getMessage());
+        }
+        
     }
     
     // Méthode pour récupérer la liste des utilisateurs bannis
