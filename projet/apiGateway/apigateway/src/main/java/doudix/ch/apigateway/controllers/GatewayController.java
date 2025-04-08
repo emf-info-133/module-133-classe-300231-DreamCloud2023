@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.POST, RequestMethod.GET, RequestMethod.DELETE})
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = { RequestMethod.POST, RequestMethod.GET,
+        RequestMethod.DELETE })
 @RestController
 @RequestMapping("/api/gateway")
 public class GatewayController {
@@ -52,6 +53,22 @@ public class GatewayController {
         System.out.println("Category: " + postDTO.getCategory());
         System.out.println("Couleur: " + postDTO.getCouleur());
         return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(postDTO), String.class);
+    }
+
+    @GetMapping("/getUser/{username}")
+    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
+        String url = REST1_BASE_URL + "/user/" + username;
+
+        try {
+            return restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    UserDTO.class);
+        } catch (Exception e) {
+            e.printStackTrace(); // Pour voir l'erreur côté Gateway
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     // Ajouter un message
@@ -108,23 +125,24 @@ public class GatewayController {
     public ResponseEntity<BanissementDTO> banUser(@RequestBody BanissementDTO banDto) {
         try {
             // Préparer l'URL du service REST2
-            String url = REST2_BASE_URL + "/api/rest2/banUser"; // Assurez-vous que l'URL correspond bien à votre service REST2
-    
+            String url = REST2_BASE_URL + "/api/rest2/banUser"; // Assurez-vous que l'URL correspond bien à votre
+                                                                // service REST2
+
             // Créer un objet Banissement à partir du DTO reçu
             BanissementDTO banissement = new BanissementDTO(banDto.getUsername(), banDto.getRemarque());
-    
+
             // Créer l'entité Http pour envoyer l'objet Banissement
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<BanissementDTO> requestEntity = new HttpEntity<>(banissement, headers);
-    
+
             // Faire la requête HTTP POST vers le service REST2
             ResponseEntity<BanissementDTO> response = restTemplate.exchange(
-                    url, 
-                    HttpMethod.POST, 
-                    requestEntity, 
+                    url,
+                    HttpMethod.POST,
+                    requestEntity,
                     BanissementDTO.class);
-    
+
             // Retourner la réponse obtenue
             return response;
         } catch (Exception e) {
@@ -132,7 +150,6 @@ public class GatewayController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-    
 
     // Récupérer tous les bannissements
     @GetMapping("/getBans")

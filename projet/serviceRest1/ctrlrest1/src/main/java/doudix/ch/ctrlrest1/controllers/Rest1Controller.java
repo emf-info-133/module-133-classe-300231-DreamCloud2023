@@ -25,15 +25,13 @@ public class Rest1Controller {
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         try {
             User user = service.login(userDTO.getUsername(), userDTO.getPassword());
-            return (user != null) ?
-                    ResponseEntity.ok("Login successful") :
-                    ResponseEntity.status(401).body("Invalid credentials");
+            return (user != null) ? ResponseEntity.ok("Login successful")
+                    : ResponseEntity.status(401).body("Invalid credentials");
         } catch (Exception e) {
             e.printStackTrace(); // log dans les logs du conteneur
             return ResponseEntity.status(500).body("Erreur interne: " + e.getMessage());
         }
     }
-    
 
     // Déconnexion
     @PostMapping("/logout")
@@ -60,24 +58,23 @@ public class Rest1Controller {
     @PostMapping("/addPost")
     public ResponseEntity<Post> addPost(@RequestBody PostDTO postDTO) {
         Post post = service.addPost(
-            postDTO.getCreatorId(),
-            postDTO.getTitle(),
-            postDTO.getDescription(),
-            postDTO.getImageUrl(),
-            postDTO.getCategory(),
-            postDTO.getCouleur()
-        );
+                postDTO.getCreatorId(),
+                postDTO.getTitle(),
+                postDTO.getDescription(),
+                postDTO.getImageUrl(),
+                postDTO.getCategory(),
+                postDTO.getCouleur());
         return ResponseEntity.ok(post);
     }
+
 
     // Ajouter un message
     @PostMapping("/addMsg")
     public ResponseEntity<Message> addMessage(@RequestBody MessageDTO messageDTO) {
         Message message = service.addMessage(
-            messageDTO.getText(),
-            messageDTO.getCreatorId(),
-            messageDTO.getPostId()
-        );
+                messageDTO.getText(),
+                messageDTO.getCreatorId(),
+                messageDTO.getPostId());
         return ResponseEntity.ok(message);
     }
 

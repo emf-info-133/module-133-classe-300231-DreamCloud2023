@@ -27,7 +27,7 @@ function login(loginInfo, successCallback, errorCallback) {
  */
 function logout(successCallback, errorCallback) {
     $.ajax({
-        url: '/api/gateway/logout',
+        url: 'http://localhost:8082/api/gateway/logout',
         type: 'POST',
         success: successCallback,
         error: errorCallback
@@ -61,7 +61,7 @@ function addUser(user, successCallback, errorCallback) {
  */
 function addPost(post, successCallback, errorCallback) {
     $.ajax({
-        url: '/api/gateway/addPost',
+        url: 'http://localhost:8082/api/gateway/addPost',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(post),
@@ -69,6 +69,23 @@ function addPost(post, successCallback, errorCallback) {
         error: errorCallback
     });
 }
+
+/**
+ * Récupère un utilisateur par son username
+ * 
+ * @param {*} username 
+ * @param {*} successCallback 
+ * @param {*} errorCallback 
+ */
+function getUserByUsername(username, successCallback, errorCallback) {
+    $.ajax({
+        url: `http://localhost:8082/api/gateway/getUser/${username}`, // ← via Gateway
+        type: 'GET',
+        success: successCallback,
+        error: errorCallback
+    });
+}
+
 
 /**
  * Méthode permettant d'ajouter un message
