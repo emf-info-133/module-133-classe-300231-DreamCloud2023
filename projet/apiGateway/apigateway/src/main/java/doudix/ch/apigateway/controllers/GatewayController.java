@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*", methods = { RequestMethod.POST, RequestMethod.GET,
-        RequestMethod.DELETE })
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.POST, RequestMethod.GET, RequestMethod.DELETE})
 @RestController
 @RequestMapping("/api/gateway")
 public class GatewayController {
@@ -125,9 +124,8 @@ public class GatewayController {
     public ResponseEntity<BanissementDTO> banUser(@RequestBody BanissementDTO banDto) {
         try {
             // Préparer l'URL du service REST2
-            String url = REST2_BASE_URL + "/api/rest2/banUser"; // Assurez-vous que l'URL correspond bien à votre
-                                                                // service REST2
-
+            String url = REST2_BASE_URL + "/api/rest2/banUser"; // Assurez-vous que l'URL correspond bien à votre service REST2
+    
             // Créer un objet Banissement à partir du DTO reçu
             BanissementDTO banissement = new BanissementDTO(banDto.getUsername(), banDto.getRemarque());
 
@@ -146,7 +144,7 @@ public class GatewayController {
             // Retourner la réponse obtenue
             return response;
         } catch (Exception e) {
-            // En cas d'erreur, retournez une réponse interne du serveur
+            e.printStackTrace(); // Pour afficher l'exception dans les logs
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
