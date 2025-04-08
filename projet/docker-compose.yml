@@ -45,12 +45,12 @@ services:
       - "8083:8080"
     environment:
       # Connexion à la deuxième base (ban_db)
-      - SPRING_BAN-DATASOURCE_URL=jdbc:mysql://ban-mysql:3306/rest2_database
-      - SPRING_BAN-DATASOURCE_USERNAME=root
-      - SPRING_BAN-DATASOURCE_PASSWORD=emf123
-      - SPRING_BAN-DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+      - SPRING_DATASOURCE_URL=jdbc:mysql://ban-mysql:3306/rest2_database
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=emf123
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
       - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQL8Dialect
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_JPA_SHOW_SQL=true
     depends_on:
       mysql_ban:
