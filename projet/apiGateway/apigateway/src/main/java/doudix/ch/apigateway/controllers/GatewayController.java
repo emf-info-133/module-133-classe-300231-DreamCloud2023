@@ -129,16 +129,21 @@ public class GatewayController {
     public ResponseEntity<BanissementDTO> banUser(@RequestBody BanissementDTO banDto) {
         try {
             // Préparer l'URL du service REST2
-            String url = REST2_BASE_URL + "/api/rest2/banUser"; // Assurez-vous que l'URL correspond bien à votre
-                                                                // service REST2
+            String url = REST2_BASE_URL + "/banUser"; // Assurez-vous que l'URL correspond bien à votre service REST2
+    
+            System.out.println(banDto.getUsername());
+            System.out.println(banDto.getRemarque());
 
-            // Créer un objet Banissement à partir du DTO reçu
             BanissementDTO banissement = new BanissementDTO(banDto.getUsername(), banDto.getRemarque());
-
+            
+            System.out.println("Check1");
             // Créer l'entité Http pour envoyer l'objet Banissement
             HttpHeaders headers = new HttpHeaders();
+            System.out.println("Check2");
             headers.setContentType(MediaType.APPLICATION_JSON);
+            System.out.println("Check3");
             HttpEntity<BanissementDTO> requestEntity = new HttpEntity<>(banissement, headers);
+            System.out.println("Check4");
 
             // Faire la requête HTTP POST vers le service REST2
             ResponseEntity<BanissementDTO> response = restTemplate.exchange(
@@ -148,6 +153,7 @@ public class GatewayController {
                     BanissementDTO.class);
 
             // Retourner la réponse obtenue
+            System.out.println("Check5");
             return response;
         } catch (Exception e) {
             e.printStackTrace(); // Pour afficher l'exception dans les logs

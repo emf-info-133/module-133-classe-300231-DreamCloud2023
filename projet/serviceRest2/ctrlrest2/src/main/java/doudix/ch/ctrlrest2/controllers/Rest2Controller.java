@@ -25,7 +25,6 @@ public class Rest2Controller {
     }
 
     // Bannir un utilisateur
-    // Bannir un utilisateur
     @PostMapping("/banUser")
     public ResponseEntity<BanissementDTO> banUser(@RequestBody Banissement banissement) {
         try {
