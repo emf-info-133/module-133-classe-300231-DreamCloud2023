@@ -1,5 +1,6 @@
 package doudix.ch.ctrlrest1.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,14 +18,18 @@ public class User {
     private String username;
     private String password;
 
+    @Column(name = "is_admin")
+    private boolean isAdmin;
+
     // Constructeur par défaut
     public User() {
     }
 
     // Constructeur avec paramètres
-    public User(String username, String password) {
+    public User(String username, String password, boolean isAdmin) {
         this.username = username;
         this.password = password;
+        this.isAdmin = isAdmin;
     }
 
     // Getters
@@ -40,6 +45,10 @@ public class User {
         return password;
     }
 
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
     // Setters
     public void setUsername(String username) {
         this.username = username;
@@ -47,6 +56,10 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     // Méthode toString

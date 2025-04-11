@@ -22,16 +22,21 @@ public class Rest1Controller {
     private Rest1Service service;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
-        try {
-            User user = service.login(userDTO.getUsername(), userDTO.getPassword());
-            return (user != null) ? ResponseEntity.ok("Login successful")
-                    : ResponseEntity.status(401).body("Invalid credentials");
-        } catch (Exception e) {
-            e.printStackTrace(); // log dans les logs du conteneur
-            return ResponseEntity.status(500).body("Erreur interne: " + e.getMessage());
+public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
+    try {
+        User user = service.login(userDTO.getUsername(), userDTO.getPassword());
+        if (user != null) {
+            UserDTO response = new UserDTO(user.getId(), user.getUsername(), user.getPassword(), user.isAdmin());
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(401).body(null);
         }
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(500).body(null);
     }
+}
+
 
     // Déconnexion
     @PostMapping("/logout")
@@ -71,7 +76,7 @@ public class Rest1Controller {
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
         User user = service.getUserByUsername(username);
         if (user != null) {
-            return ResponseEntity.ok(new UserDTO(user.getId(), user.getUsername(), user.getPassword()));
+            return ResponseEntity.ok(new UserDTO(user.getId(), user.getUsername(), user.getPassword(), user.isAdmin()));
         } else {
             return ResponseEntity.status(404).body(null);
         }
