@@ -122,7 +122,7 @@ function getMessagesByPost(postId, successCallback, errorCallback) {
  */
 function addMsg(msg, successCallback, errorCallback) {
     $.ajax({
-        url: '/api/gateway/addMsg',
+        url: 'http://localhost:8080/api/gateway/addMsg',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(msg),
@@ -167,13 +167,22 @@ function deleteUser(user, successCallback, errorCallback) {
     });
 }
 
-function getUsernameById(userId, successCallback, errorCallback) {
+function getUsernameById(userId) {
     console.log(userId);
-    $.ajax({
-        url: `http://localhost:8080/api/gateway/getUserById/${userId}`,  // Corrigé pour pointer sur localhost:8080
-        type: 'GET',
-        success: successCallback,
-        error: errorCallback
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `http://localhost:8080/api/gateway/getUserById/${userId}`,
+            type: 'GET',
+            success: function (data) {
+                console.log(data); // Afficher la réponse pour vérifier sa structure
+                resolve(data.username); // On retourne le nom d'utilisateur
+            },
+            error: function (error) {
+                reject(error); // En cas d'erreur
+            }
+        });
     });
 }
+
+
 

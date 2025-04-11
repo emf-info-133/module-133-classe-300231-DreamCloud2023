@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import doudix.ch.ctrlrest1.dto.PostDTO;
 import doudix.ch.ctrlrest1.models.Message;
 import doudix.ch.ctrlrest1.models.MessageRepository;
 import doudix.ch.ctrlrest1.models.Post;
@@ -71,9 +72,29 @@ public class Rest1Service {
         return userRepository.findByUsername(username);
     }
 
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
-    }
+    public List<PostDTO> getAllPosts() {
+    List<Post> posts = postRepository.findAll();
+    List<PostDTO> dtos = posts.stream().map(p -> {
+        // Récupérer l'utilisateur en utilisant le creatorId
+        User user = userRepository.findById(p.getCreatorId().longValue()).orElse(null);
+        String creatorUsername = (user != null) ? user.getUsername() : "Unknown"; // Vérifier si l'utilisateur existe
+
+        // Créer un PostDTO avec le nom de l'utilisateur
+        return new PostDTO(
+            p.getPostId(),
+            p.getCreatorId(),
+            creatorUsername,  // Ajouter le nom de l'utilisateur ici
+            p.getImageUrl(),
+            p.getTitle(),
+            p.getDescription(),
+            p.getCategory(),
+            p.getCouleur()
+        );
+    }).toList();
+
+    return dtos;
+}
+
 
     public Message addMessage(String text, Long creatorId, Long postId) {
         Message msg = new Message();

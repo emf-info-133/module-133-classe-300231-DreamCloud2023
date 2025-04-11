@@ -3,8 +3,9 @@ package doudix.ch.ctrlrest1.dto;
 import java.math.BigInteger;
 
 public class PostDTO {
-    private Long id; // ← ici
+    private Long id;
     private BigInteger creatorId;
+    private String creatorUsername;  // Ajout du nom de l'utilisateur
     private String imageUrl;
     private String title;
     private String description;
@@ -13,9 +14,10 @@ public class PostDTO {
 
     public PostDTO() {}
 
-    public PostDTO(Long id, BigInteger creatorId, String imageUrl, String title, String description, String category, String couleur) {
+    public PostDTO(Long id, BigInteger creatorId, String creatorUsername, String imageUrl, String title, String description, String category, String couleur) {
         this.id = id;
         this.creatorId = creatorId;
+        this.creatorUsername = creatorUsername;
         this.imageUrl = imageUrl;
         this.title = title;
         this.description = description;
@@ -23,15 +25,18 @@ public class PostDTO {
         this.couleur = couleur;
     }
 
+    // Getters et setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    // Getters & setters
     public Long getPostId() { return id; }
     public void setPostId(Long postId) { this.id = postId; }
 
     public BigInteger getCreatorId() { return creatorId; }
     public void setCreatorId(BigInteger creatorId) { this.creatorId = creatorId; }
+
+    public String getCreatorUsername() { return creatorUsername; }
+    public void setCreatorUsername(String creatorUsername) { this.creatorUsername = creatorUsername; }
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }

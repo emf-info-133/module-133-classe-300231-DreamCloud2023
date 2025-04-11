@@ -20,7 +20,7 @@ $(document).ready(function () {
       $(".main-post img").attr("src", post.imageUrl);
       $(".post-title").text(post.title);
       $(".post-description").text(post.description);
-      $(".post-author").text("Par " + (post.username || post.creatorId));
+      $(".post-author").text("Par " + (post.creatorUsername || post.creatorId));
     }
   
     // Fonction pour afficher les messages
@@ -36,7 +36,7 @@ $(document).ready(function () {
       messages.forEach(msg => {
         const comment = `
           <div class="comment">
-            <span class="username">${msg.username || msg.creatorId} :</span>
+            <span class="username">${msg.creatorUsername || msg.creatorId} :</span>
             <p>${msg.text}</p>
           </div>`;
         $container.append(comment);

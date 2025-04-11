@@ -42,42 +42,40 @@ $(document).ready(function () {
     displayPosts(filteredPosts);
   });
 
-  // Affiche les posts sans nom d’auteur
-  function displayPosts(posts) {
+  async function displayPosts(posts) {
     const $postList = $(".post-list");
     $postList.empty();
 
     if (posts.length === 0) {
-      $postList.append("<p>Aucun post trouvé pour cette catégorie.</p>");
-      return;
+        $postList.append("<p>Aucun post trouvé pour cette catégorie.</p>");
+        return;
     }
 
-    posts.forEach(function (post) {
-      const postHtml = `
-      <a href="#" class="post ${post.couleur}" data-id="${post.postId}">
-      <div class="thumbnail">
-            <img src="${post.imageUrl}" alt="Image" style="width: 100px; height: 80px; object-fit: cover;">
-          </div>
-          <div class="details">
-            <h3>${post.title}</h3>
-            <p>${post.description}</p>
-            <span class="category-tag">${post.category}</span>
-          </div>
-        </a>`;
-      $(".post-list").append(postHtml);
-    });
+    for (let post of posts) {
+        // On suppose que le nom du créateur est maintenant dans post.creatorName
+        const username = post.creatorUsername || "Auteur inconnu"; // Utiliser "Auteur inconnu" si le nom est manquant
+
+        const postHtml = `
+            <a href="#" class="post ${post.couleur}" data-id="${post.postId}">
+            <div class="thumbnail">
+                <img src="${post.imageUrl}" alt="Image" style="width: 100px; height: 80px; object-fit: cover;">
+            </div>
+            <div class="details">
+                <h3>${post.title}</h3>
+                <p>${post.description}</p>
+                <span class="category-tag">${post.category}</span>
+            </div>
+            <div class="author">By ${username}</div>
+            </a>`;
+
+        $postList.append(postHtml);
+    }
   }
 
-  // Quand on clique sur un post, enregistrer son ID dans localStorage
   $(document).on("click", ".post", function (e) {
     e.preventDefault(); // empêche le saut immédiat
     const postId = $(this).data("id");
     localStorage.setItem("selectedPostId", String(postId));
     window.location.href = "discussion.html"; // on navigue seulement après avoir stocké
   });
-  
-
-
-
-
 });
