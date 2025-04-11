@@ -79,7 +79,7 @@ function addPost(post, successCallback, errorCallback) {
  */
 function getUserByUsername(username, successCallback, errorCallback) {
     $.ajax({
-        url: `http://localhost:8080/api/gateway/getUser/${username}`, // ← via Gateway
+        url: `http://localhost:8080/api/gateway/getUser/${username}`,
         type: 'GET',
         success: successCallback,
         error: errorCallback
@@ -89,6 +89,22 @@ function getUserByUsername(username, successCallback, errorCallback) {
 function getAllPosts(successCallback, errorCallback) {
     $.ajax({
         url: 'http://localhost:8080/api/gateway/getPosts',
+        type: 'GET',
+        success: successCallback,
+        error: errorCallback
+    });
+}
+
+/**
+ * Récupère tous les messages d’un post
+ * 
+ * @param {*} postId identifiant du post
+ * @param {*} successCallback 
+ * @param {*} errorCallback 
+ */
+function getMessagesByPost(postId, successCallback, errorCallback) {
+    $.ajax({
+        url: `http://localhost:8080/api/gateway/getMessages/${postId}`,
         type: 'GET',
         success: successCallback,
         error: errorCallback

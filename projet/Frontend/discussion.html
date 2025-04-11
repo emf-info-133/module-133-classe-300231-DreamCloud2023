@@ -6,44 +6,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Discussion - Doudix</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/projet/Frontend/javascript/services/servicesHttp.js"></script>
+  <script src="/projet/Frontend/javascript/controllers/discussionCtrl.js"></script>
   <link rel="stylesheet" href="/projet/Frontend/css/style.css">
 </head>
 
 <body>
-  <header>
+  <header class="topbar">
     <div class="logo">
       <img src="https://kazanjiana.emf-informatique.ch/133-Ressource/image.jpg" alt="Doudix Logo">
     </div>
-    <a href="home.html" class="back-button">← Retour</a>
+    <a href="home.html" class="btn">← Retour</a>
   </header>
 
   <main class="container">
     <!-- Post Principal -->
     <section class="main-post">
       <div class="post-header">
-        <img src="image_placeholder.png" alt="Post image" />
+        <img class="post-image" src="" alt="Image du post" />
         <div>
-          <h2 class="post-title">How to do maths ?</h2>
-          <p class="post-author">Par User1235</p>
+          <h2 class="post-title"></h2>
+          <p class="post-author"></p>
         </div>
       </div>
-      <p class="post-description">
-        Description détaillée du post. Ce texte peut inclure une explication, un lien ou toute info utile concernant le sujet.
-      </p>
+      <p class="post-description"></p>
     </section>
 
     <!-- Zone de Discussion -->
     <section class="discussion-section">
       <h3>Discussion</h3>
       <div class="comments">
-        <div class="comment">
-          <span class="username">User456 :</span>
-          <p>Tu peux utiliser la méthode de Pythagore, c’est super utile !</p>
-        </div>
-        <div class="comment">
-          <span class="username">User789 :</span>
-          <p>Check aussi la chaîne YouTube "MathsIsFun", très bien expliquée.</p>
-        </div>
+        <!-- Messages ajoutés dynamiquement ici -->
       </div>
 
       <!-- Formulaire de réponse -->

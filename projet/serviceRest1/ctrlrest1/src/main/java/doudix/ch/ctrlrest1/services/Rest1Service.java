@@ -88,6 +88,10 @@ public class Rest1Service {
         return messageRepository.save(msg);
     }
 
+    public List<Message> getMessagesByPost(Long postId) {
+        return messageRepository.findByPostPostId(postId); // pas besoin d'une liste ici
+    }
+
     // Méthode pour supprimer les messages et les posts
     @Transactional
     public void deleteMessagesAndPosts(List<Long> postIds) {

@@ -78,10 +78,21 @@ public class Rest1Controller {
     }
 
     @GetMapping("/getPosts")
-    public ResponseEntity<List<Post>> getAllPosts() {
-        List<Post> posts = service.getAllPosts();
-        return ResponseEntity.ok(posts);
-    }
+public ResponseEntity<List<PostDTO>> getAllPosts() {
+    List<Post> posts = service.getAllPosts();
+    List<PostDTO> dtos = posts.stream().map(p -> new PostDTO(
+        p.getPostId(),   // ← devrait marcher
+        p.getCreatorId(),
+        p.getImageUrl(),
+        p.getTitle(),
+        p.getDescription(),
+        p.getCategory(),
+        p.getCouleur()
+    )).toList();
+
+    return ResponseEntity.ok(dtos);
+}
+
 
     // Ajouter un message
     @PostMapping("/addMsg")
@@ -91,6 +102,14 @@ public class Rest1Controller {
                 messageDTO.getCreatorId(),
                 messageDTO.getPostId());
         return ResponseEntity.ok(message);
+    }
+
+    @GetMapping("/getMessages/{postId}")
+    public ResponseEntity<List<MessageDTO>> getMessagesByPost(@PathVariable Long postId) {
+        List<Message> messages = service.getMessagesByPost(postId);
+        List<MessageDTO> dtos = messages.stream()
+                .map(m -> new MessageDTO(m.getId(), m.getText(), m.getCreatorId(), m.getPost().getPostId())).toList();
+        return ResponseEntity.ok(dtos);
     }
 
     // Méthode pour supprimer un post selon son ID dans le service cible

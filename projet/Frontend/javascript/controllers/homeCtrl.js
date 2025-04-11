@@ -53,9 +53,9 @@ $(document).ready(function () {
     }
 
     posts.forEach(function (post) {
-      const postHtml = $(`
-        <a href="discussion.html" class="post ${post.couleur}">
-          <div class="thumbnail">
+      const postHtml = `
+      <a href="#" class="post ${post.couleur}" data-id="${post.postId}">
+      <div class="thumbnail">
             <img src="${post.imageUrl}" alt="Image" style="width: 100px; height: 80px; object-fit: cover;">
           </div>
           <div class="details">
@@ -63,10 +63,22 @@ $(document).ready(function () {
             <p>${post.description}</p>
             <span class="category-tag">${post.category}</span>
           </div>
-        </a>
-      `);
-
-      $postList.append(postHtml);
+          <div class="author">By ${post.username || post.creatorId}</div>
+        </a>`;
+      $(".post-list").append(postHtml);
     });
   }
+
+  // Quand on clique sur un post, enregistrer son ID dans localStorage
+  $(document).on("click", ".post", function (e) {
+    e.preventDefault(); // empêche le saut immédiat
+    const postId = $(this).data("id");
+    localStorage.setItem("selectedPostId", String(postId));
+    window.location.href = "discussion.html"; // on navigue seulement après avoir stocké
+  });
+  
+
+
+
+
 });

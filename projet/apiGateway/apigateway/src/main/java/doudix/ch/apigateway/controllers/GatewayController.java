@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.apache.logging.log4j.message.Message;
 import org.springframework.core.ParameterizedTypeReference;
 
 @RestController
@@ -82,6 +83,24 @@ public class GatewayController {
         return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(messageDTO), String.class);
     }
 
+    @GetMapping("/getMessages/{postId}")
+    public ResponseEntity<List<MessageDTO>> getMessagesByPost(@PathVariable Long postId) {
+        String url = REST1_BASE_URL + "/getMessages/" + postId;
+
+        try {
+            ResponseEntity<List<MessageDTO>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<MessageDTO>>() {
+                    });
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
     // Supprimer un post
     @DeleteMapping("/deletePost")
     public ResponseEntity<String> deletePost(@RequestBody Map<String, Long> requestBody) {
@@ -130,12 +149,12 @@ public class GatewayController {
         try {
             // Préparer l'URL du service REST2
             String url = REST2_BASE_URL + "/banUser"; // Assurez-vous que l'URL correspond bien à votre service REST2
-    
+
             System.out.println(banDto.getUsername());
             System.out.println(banDto.getRemarque());
 
             BanissementDTO banissement = new BanissementDTO(banDto.getUsername(), banDto.getRemarque());
-            
+
             System.out.println("Check1");
             // Créer l'entité Http pour envoyer l'objet Banissement
             HttpHeaders headers = new HttpHeaders();
