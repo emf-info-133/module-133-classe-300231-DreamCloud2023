@@ -5,12 +5,14 @@ $(document).ready(function () {
   }
 
   let allPosts = [];
-  let userCache = {}; // Pour éviter les appels redondants à la BDD
 
   // Charger tous les posts
   getAllPosts(
     function (posts) {
+      console.log('Posts chargés:', posts);  // Log de tous les posts
       allPosts = posts;
+
+      // Directement utiliser les posts sans récupérer le nom de l'utilisateur
       displayPosts(allPosts);
     },
     function () {
@@ -40,21 +42,7 @@ $(document).ready(function () {
     displayPosts(filteredPosts);
   });
 
-  // Nouvelle fonction pour récupérer un nom via un ID
-  function getUsernameById(userId, callback) {
-    if (userCache[userId]) {
-      callback(userCache[userId]);
-    } else {
-      $.get(`/api/users/${userId}`, function (user) {
-        userCache[userId] = user.username;
-        callback(user.username);
-      }).fail(function () {
-        callback("Inconnu");
-      });
-    }
-  }
-
-  // Affiche les posts avec les bons noms d’auteurs
+  // Affiche les posts sans nom d’auteur
   function displayPosts(posts) {
     const $postList = $(".post-list");
     $postList.empty();
@@ -75,22 +63,10 @@ $(document).ready(function () {
             <p>${post.description}</p>
             <span class="category-tag">${post.category}</span>
           </div>
-          <div class="author">By <span class="author-name">Chargement...</span></div>
         </a>
       `);
 
       $postList.append(postHtml);
-
-      const $authorName = postHtml.find(".author-name");
-
-      if (post.username) {
-        $authorName.text(post.username);
-      } else {
-        console.log(post.creatorId);
-        getUsernameById(post.creatorId, function (name) {
-          $authorName.text(name);
-        });
-      }
     });
   }
 });

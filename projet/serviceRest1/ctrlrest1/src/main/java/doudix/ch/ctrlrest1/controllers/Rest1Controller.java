@@ -117,9 +117,9 @@ public class Rest1Controller {
         }
     }
 
-    @GetMapping("/getUsernameById/{id}")
-    public ResponseEntity<String> getUsernameById(@PathVariable Long id) {
-        System.out.println("Id de l'utilisateur : " + id);
+    @GetMapping("/getUserById/{id}")
+    public ResponseEntity<String> getUserById(@PathVariable Long id) {
+      
         String username = service.getUsernameById(id);
        
         if (username != null) {

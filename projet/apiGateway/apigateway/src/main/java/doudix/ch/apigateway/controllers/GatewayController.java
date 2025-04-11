@@ -183,9 +183,9 @@ public class GatewayController {
     }
 
     @GetMapping("/getUserById/{userId}")
-    public ResponseEntity<String> getUserById(@PathVariable Long id) {
-        String url = REST1_BASE_URL + "/getUsernameById/" + id;
-        System.out.println("Id de l'utilisateur : " + id);
+    public ResponseEntity<String> getUserById(@PathVariable Long userId) {
+        String url = REST1_BASE_URL + "/getUserById/" + userId;
+        System.out.println("Id de l'utilisateur : " + userId);
         try {
             return restTemplate.exchange(url, HttpMethod.GET, null, String.class);
         } catch (Exception e) {
