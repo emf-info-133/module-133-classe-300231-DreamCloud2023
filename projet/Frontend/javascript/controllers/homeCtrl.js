@@ -63,7 +63,6 @@ $(document).ready(function () {
             <p>${post.description}</p>
             <span class="category-tag">${post.category}</span>
           </div>
-          <div class="author">By ${post.username || post.creatorId}</div>
         </a>`;
       $(".post-list").append(postHtml);
     });
