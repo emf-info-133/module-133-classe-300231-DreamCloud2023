@@ -16,11 +16,22 @@ $(document).ready(function () {
   });
 
   // Callback en cas de succès
-  function loginSuccess(response) {
-    alert("Connexion réussie !");
-    sessionStorage.setItem("loggedUser", $("#login-username").val().trim());
-    window.location.href = "home.html";
+  function loginSuccess(user) {
+    console.log("User reçu du backend :", user); // ← Tu dois voir isAdmin: true/false ici
+
+    sessionStorage.setItem("loggedUser", user.username);
+    sessionStorage.setItem("isAdmin", user.isAdmin);
+
+    if (user.isAdmin) {
+      window.location.href = "homeAdmin.html";
+    } else {
+      window.location.href = "home.html";
+    }
+
   }
+
+
+
 
   // Callback en cas d'erreur
   function loginError(xhr) {
