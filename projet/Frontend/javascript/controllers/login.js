@@ -17,14 +17,16 @@ $(document).ready(function () {
 
   // Callback en cas de succès
   function loginSuccess(user) {
-    console.log("User reçu du backend :", user); // ← Tu dois voir isAdmin: true/false ici
+    console.log("User reçu du backend :", user);
 
     sessionStorage.setItem("loggedUser", user.username);
-    sessionStorage.setItem("isAdmin", user.isAdmin);
+    sessionStorage.setItem("isAdmin", user.admin);
 
-    if (user.isAdmin) {
+    if (user.admin) {
+      console.log(user.admin)
       window.location.href = "homeAdmin.html";
     } else {
+      console.log("wtf : "+ user.admin)
       window.location.href = "home.html";
     }
 
