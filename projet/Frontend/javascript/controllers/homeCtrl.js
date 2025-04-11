@@ -1,44 +1,71 @@
 $(document).ready(function () {
-  let allPosts = [];
-
   if (!sessionStorage.getItem("loggedUser")) {
     window.location.href = "login.html";
     return;
   }
 
+  let allPosts = [];
+  let userCache = {}; // Pour éviter les appels redondants à la BDD
+
+  // Charger tous les posts
+  getAllPosts(
+    function (posts) {
+      allPosts = posts;
+      displayPosts(allPosts);
+    },
+    function () {
+      alert("Erreur lors du chargement des posts.");
+    }
+  );
+
   $("#logged-username").text(sessionStorage.getItem("loggedUser"));
 
-  // Charger tous les posts à l'initialisation
-  getAllPosts(function (posts) {
-    allPosts = posts;
-    displayPosts(posts);
-  }, function () {
-    alert("Erreur lors du chargement des posts.");
+  $("#searchInput").on("input", function () {
+    const searchTerm = $(this).val().toLowerCase();
+    const filteredPosts = allPosts.filter(post =>
+      (post.title || "").toLowerCase().includes(searchTerm)
+    );
+    displayPosts(filteredPosts);
   });
 
-  // Bouton Réinitialiser - Affiche tous les posts
   $("#resetFilter").on("click", function () {
     displayPosts(allPosts);
   });
 
-  // Filtrage par catégorie
   $(".sidebar ul li").on("click", function () {
     const selectedCategory = $(this).text().trim().toLowerCase();
-    const filteredPosts = allPosts.filter(p => p.category.toLowerCase() === selectedCategory);
+    const filteredPosts = allPosts.filter(post =>
+      (post.category || "").toLowerCase() === selectedCategory
+    );
     displayPosts(filteredPosts);
   });
 
-  // Fonction pour afficher les posts
+  // Nouvelle fonction pour récupérer un nom via un ID
+  function getUsernameById(userId, callback) {
+    if (userCache[userId]) {
+      callback(userCache[userId]);
+    } else {
+      $.get(`/api/users/${userId}`, function (user) {
+        userCache[userId] = user.username;
+        callback(user.username);
+      }).fail(function () {
+        callback("Inconnu");
+      });
+    }
+  }
+
+  // Affiche les posts avec les bons noms d’auteurs
   function displayPosts(posts) {
-    $(".post-list").empty();
+    const $postList = $(".post-list");
+    $postList.empty();
 
     if (posts.length === 0) {
-      $(".post-list").append("<p>Aucun post trouvé pour cette catégorie.</p>");
+      $postList.append("<p>Aucun post trouvé pour cette catégorie.</p>");
       return;
     }
 
     posts.forEach(function (post) {
-      const postHtml = `
+      const postHtml = $(`
         <a href="discussion.html" class="post ${post.couleur}">
           <div class="thumbnail">
             <img src="${post.imageUrl}" alt="Image" style="width: 100px; height: 80px; object-fit: cover;">
@@ -48,9 +75,22 @@ $(document).ready(function () {
             <p>${post.description}</p>
             <span class="category-tag">${post.category}</span>
           </div>
-          <div class="author">By ${post.username || post.creatorId}</div>
-        </a>`;
-      $(".post-list").append(postHtml);
+          <div class="author">By <span class="author-name">Chargement...</span></div>
+        </a>
+      `);
+
+      $postList.append(postHtml);
+
+      const $authorName = postHtml.find(".author-name");
+
+      if (post.username) {
+        $authorName.text(post.username);
+      } else {
+        console.log(post.creatorId);
+        getUsernameById(post.creatorId, function (name) {
+          $authorName.text(name);
+        });
+      }
     });
   }
 });

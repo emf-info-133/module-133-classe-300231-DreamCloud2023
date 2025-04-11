@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import doudix.ch.ctrlrest1.models.Message;
 import doudix.ch.ctrlrest1.models.MessageRepository;
@@ -107,6 +110,11 @@ public class Rest1Service {
             return true;
         }
         return false; // Si l'utilisateur n'est pas trouvé
+    }
+
+    public String getUsernameById(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        return user != null ? user.getUsername() : null;
     }
 
 }

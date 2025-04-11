@@ -181,4 +181,16 @@ public class GatewayController {
             return ResponseEntity.status(500).body(null);
         }
     }
+
+    @GetMapping("/getUserById/{userId}")
+    public ResponseEntity<String> getUserById(@PathVariable Long id) {
+        String url = REST1_BASE_URL + "/getUsernameById/" + id;
+        System.out.println("Id de l'utilisateur : " + id);
+        try {
+            return restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur interne");
+        }
+    }
+
 }

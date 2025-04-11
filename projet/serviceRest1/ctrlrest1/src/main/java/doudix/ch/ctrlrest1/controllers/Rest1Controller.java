@@ -116,4 +116,16 @@ public class Rest1Controller {
             return ResponseEntity.status(404).body("User not found");
         }
     }
+
+    @GetMapping("/getUsernameById/{id}")
+    public ResponseEntity<String> getUsernameById(@PathVariable Long id) {
+        System.out.println("Id de l'utilisateur : " + id);
+        String username = service.getUsernameById(id);
+       
+        if (username != null) {
+            return ResponseEntity.ok(username);
+        } else {
+            return ResponseEntity.status(404).body("User not found");
+        }
+    }
 }

@@ -150,3 +150,14 @@ function deleteUser(user, successCallback, errorCallback) {
         error: errorCallback
     });
 }
+
+function getUsernameById(userId, successCallback, errorCallback) {
+    console.log(userId);
+    $.ajax({
+        url: `http://localhost:8080/api/gateway/getUserById/${userId}`,  // Corrigé pour pointer sur localhost:8080
+        type: 'GET',
+        success: successCallback,
+        error: errorCallback
+    });
+}
+
