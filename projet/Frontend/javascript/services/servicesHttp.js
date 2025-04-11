@@ -9,7 +9,7 @@
  */
 function login(loginInfo, successCallback, errorCallback) {
     $.ajax({
-        url: 'http://localhost:8082/api/gateway/login',
+        url: 'http://localhost:8080/api/gateway/login',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(loginInfo),
@@ -27,7 +27,7 @@ function login(loginInfo, successCallback, errorCallback) {
  */
 function logout(successCallback, errorCallback) {
     $.ajax({
-        url: 'http://localhost:8082/api/gateway/logout',
+        url: 'http://localhost:8080/api/gateway/logout',
         type: 'POST',
         success: successCallback,
         error: errorCallback
@@ -43,7 +43,7 @@ function logout(successCallback, errorCallback) {
  */
 function addUser(user, successCallback, errorCallback) {
     $.ajax({
-        url: 'http://localhost:8082/api/gateway/addUser',
+        url: 'http://localhost:8080/api/gateway/addUser',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(user),
@@ -61,7 +61,7 @@ function addUser(user, successCallback, errorCallback) {
  */
 function addPost(post, successCallback, errorCallback) {
     $.ajax({
-        url: 'http://localhost:8082/api/gateway/addPost',
+        url: 'http://localhost:8080/api/gateway/addPost',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(post),
@@ -79,7 +79,7 @@ function addPost(post, successCallback, errorCallback) {
  */
 function getUserByUsername(username, successCallback, errorCallback) {
     $.ajax({
-        url: `http://localhost:8082/api/gateway/getUser/${username}`, // ← via Gateway
+        url: `http://localhost:8080/api/gateway/getUser/${username}`, // ← via Gateway
         type: 'GET',
         success: successCallback,
         error: errorCallback
@@ -88,7 +88,7 @@ function getUserByUsername(username, successCallback, errorCallback) {
 
 function getAllPosts(successCallback, errorCallback) {
     $.ajax({
-        url: 'http://localhost:8082/api/gateway/getPosts',
+        url: 'http://localhost:8080/api/gateway/getPosts',
         type: 'GET',
         success: successCallback,
         error: errorCallback
