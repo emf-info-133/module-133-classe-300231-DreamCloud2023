@@ -1,11 +1,7 @@
 package doudix.ch.ctrlrest1.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Users")
@@ -21,6 +17,9 @@ public class User {
     @Column(name = "is_admin")
     private boolean isAdmin;
 
+    @OneToMany(mappedBy = "creatorId", cascade = CascadeType.ALL)  // Ajoute la suppression en cascade ici
+    private List<Message> messages;
+
     // Constructeur par défaut
     public User() {
     }
@@ -32,7 +31,7 @@ public class User {
         this.isAdmin = isAdmin;
     }
 
-    // Getters
+    // Getters et Setters
     public Long getId() {
         return id;
     }
@@ -49,7 +48,14 @@ public class User {
         return isAdmin;
     }
 
-    // Setters
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }

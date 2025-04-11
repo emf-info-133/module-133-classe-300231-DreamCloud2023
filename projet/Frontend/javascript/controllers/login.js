@@ -24,7 +24,7 @@ $(document).ready(function () {
 
     if (user.admin) {
       console.log(user.admin)
-      window.location.href = "homeAdmin.html";
+      window.location.href = "home.html";
     } else {
       console.log("wtf : "+ user.admin)
       window.location.href = "home.html";

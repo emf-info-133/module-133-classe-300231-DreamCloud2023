@@ -212,4 +212,25 @@ public class GatewayController {
         }
     }
 
+    // Récupérer tous les utilisateurs
+    @GetMapping("/getAllUsers")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        String url = REST1_BASE_URL + "/getAllUsers";
+
+        try {
+            ResponseEntity<List<UserDTO>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<UserDTO>>() {
+                    });
+
+            return ResponseEntity.ok(response.getBody());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 }
