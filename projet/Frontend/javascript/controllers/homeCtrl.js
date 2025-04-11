@@ -4,6 +4,8 @@ $(document).ready(function () {
     return;
   }
 
+  const defaultImage = "/projet/Frontend/assets/pas-de-photo.png"; // ← Image par défaut
+
   let allPosts = [];
 
   // Charger tous les posts
@@ -11,8 +13,6 @@ $(document).ready(function () {
     function (posts) {
       console.log('Posts chargés:', posts);  // Log de tous les posts
       allPosts = posts;
-
-      // Directement utiliser les posts sans récupérer le nom de l'utilisateur
       displayPosts(allPosts);
     },
     function () {
@@ -47,35 +47,35 @@ $(document).ready(function () {
     $postList.empty();
 
     if (posts.length === 0) {
-        $postList.append("<p>Aucun post trouvé pour cette catégorie.</p>");
-        return;
+      $postList.append("<p>Aucun post trouvé pour cette catégorie.</p>");
+      return;
     }
 
     for (let post of posts) {
-        // On suppose que le nom du créateur est maintenant dans post.creatorName
-        const username = post.creatorUsername || "Auteur inconnu"; // Utiliser "Auteur inconnu" si le nom est manquant
+      const username = post.creatorUsername || "Auteur inconnu";
+      const imageUrl = post.imageUrl && post.imageUrl.trim() !== "" ? post.imageUrl : defaultImage;
 
-        const postHtml = `
-            <a href="#" class="post ${post.couleur}" data-id="${post.postId}">
-            <div class="thumbnail">
-                <img src="${post.imageUrl}" alt="Image" style="width: 100px; height: 80px; object-fit: cover;">
-            </div>
-            <div class="details">
-                <h3>${post.title}</h3>
-                <p>${post.description}</p>
-                <span class="category-tag">${post.category}</span>
-            </div>
-            <div class="author">By ${username}</div>
-            </a>`;
+      const postHtml = `
+        <a href="#" class="post ${post.couleur}" data-id="${post.postId}">
+          <div class="thumbnail">
+            <img src="${imageUrl}" alt="Image" style="width: 100px; height: 80px; object-fit: cover;">
+          </div>
+          <div class="details">
+            <h3>${post.title}</h3>
+            <p>${post.description}</p>
+            <span class="category-tag">${post.category}</span>
+          </div>
+          <div class="author">By ${username}</div>
+        </a>`;
 
-        $postList.append(postHtml);
+      $postList.append(postHtml);
     }
   }
 
   $(document).on("click", ".post", function (e) {
-    e.preventDefault(); // empêche le saut immédiat
+    e.preventDefault();
     const postId = $(this).data("id");
     localStorage.setItem("selectedPostId", String(postId));
-    window.location.href = "discussion.html"; // on navigue seulement après avoir stocké
+    window.location.href = "discussion.html";
   });
 });

@@ -21,33 +21,37 @@
   </header>
 
   <main class="container">
-    <!-- Post Principal (style home) -->
-    <section class="main-post post">
-      <div class="thumbnail">
-        <img class="post-image" src="" alt="Image du post" />
-      </div>
-      <div class="details">
-        <h3 class="post-title"></h3>
-        <p class="post-description"></p>
-        <span class="category-tag"></span>
-        <div class="author post-author"></div>
-      </div>
-    </section>
-
-    <!-- Zone de Discussion -->
-    <section class="discussion-section">
-      <h3>Discussion</h3>
-      <div class="comments">
-        <!-- Messages injectés dynamiquement -->
-      </div>
-
-      <!-- Formulaire de réponse -->
+    <div class="left-col">
+      <section class="main-post post">
+        <div class="thumbnail">
+          <img class="post-image" src="" alt="Image du post" />
+        </div>
+        <div class="details">
+          <h3 class="post-title"></h3>
+          <p class="post-description"></p>
+          <span class="category-tag"></span>
+          <div class="author post-author"></div>
+        </div>
+      </section>
+  
+      <!-- Formulaire réponse sous la case -->
       <form class="reply-form">
         <textarea placeholder="Écrire une réponse..." required></textarea>
         <button type="submit">Envoyer</button>
       </form>
-    </section>
+    </div>
+  
+    <!-- Commentaires à droite -->
+    <div class="right-col">
+      <section class="discussion-section">
+        <h3>Discussion</h3>
+        <div class="comments">
+          <!-- Messages injectés dynamiquement -->
+        </div>
+      </section>
+    </div>
   </main>
+  
 </body>
 
 </html>
