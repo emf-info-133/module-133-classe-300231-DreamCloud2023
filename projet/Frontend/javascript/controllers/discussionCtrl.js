@@ -17,11 +17,14 @@ $(document).ready(function () {
   
     // Fonction pour afficher les infos du post
     function displayPost(post) {
-      $(".main-post img").attr("src", post.imageUrl);
+      $(".main-post").addClass(post.couleur); // couleur du post
+      $(".post-image").attr("src", post.imageUrl);
       $(".post-title").text(post.title);
       $(".post-description").text(post.description);
-      $(".post-author").text("Par " + (post.creatorUsername || post.creatorId));
+      $(".category-tag").text(post.category);
+      $(".post-author").text("By " + (post.creatorUsername || post.creatorId));
     }
+    
   
     // Fonction pour afficher les messages
     function displayMessages(messages) {
