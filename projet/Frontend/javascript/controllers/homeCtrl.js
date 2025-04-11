@@ -13,7 +13,18 @@ $(document).ready(function () {
       $(".ban-button").hide();  // Cacher le bouton "Ban Users"
   }
 
-  let allPosts = [];
+  let allUsers = [];  // Liste globale des utilisateurs
+  let allPosts = [];  // Liste des posts
+
+  // Charger tous les utilisateurs dès le chargement de la page
+  getAllUsers(
+      function (users) {
+          allUsers = users;  // Stocker les utilisateurs dans la variable globale
+      },
+      function () {
+          alert("Erreur lors du chargement des utilisateurs.");
+      }
+  );
 
   // Charger tous les posts
   getAllPosts(
@@ -90,4 +101,44 @@ $(document).ready(function () {
       localStorage.setItem("selectedPostId", String(postId));
       window.location.href = "discussion.html"; // on navigue seulement après avoir stocké
   });
+
+  // Logique pour le modal de bannissement
+  $("#openBanModal").click(function () {
+      $("#banModal").fadeIn();
+
+      // Utiliser la liste des utilisateurs déjà récupérée lors du chargement de la page
+      const $select = $("#userSelect").empty();
+      allUsers.forEach(u => {
+          $select.append(`<option value="${u.username}">${u.username}</option>`);
+      });
+  });
+
+  $("#closeBanModal").click(function () {
+      $("#banModal").fadeOut();
+  });
+
+  $("#banUserBtn").click(function () {
+    const username = $("#userSelect").val(); // Nom d'utilisateur à bannir
+    const remarque = $("#banReason").val(); // Raison du bannissement
+
+    if (!remarque.trim()) {
+        alert("Merci d'ajouter une remarque.");
+        return;
+    }
+
+    // Bannir l'utilisateur
+    banUser({ username, remarque }, function () {
+        alert("Utilisateur banni avec succès !");
+
+        // Une fois l'utilisateur banni, on le supprime
+        deleteUser({ username }, function () {
+            alert("Utilisateur supprimé avec succès !");
+            $("#banModal").fadeOut();
+        }, function () {
+            alert("Erreur lors de la suppression de l'utilisateur.");
+        });
+    }, function () {
+        alert("Erreur lors du bannissement.");
+    });
+});
 });

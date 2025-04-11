@@ -82,6 +82,16 @@ public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
         }
     }
 
+    @GetMapping("/getAllUsers")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> users = service.getAllUsers();  
+        if (!users.isEmpty()) {
+            return ResponseEntity.ok(users); 
+        } else {
+            return ResponseEntity.status(404).body(null); 
+        }
+    }
+
     @GetMapping("/getPosts")
     public ResponseEntity<List<PostDTO>> getAllPosts() {
         List<PostDTO> dtos = service.getAllPosts();  // Utiliser le service mis à jour

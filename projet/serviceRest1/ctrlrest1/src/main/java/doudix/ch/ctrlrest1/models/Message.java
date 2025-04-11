@@ -2,7 +2,6 @@ package doudix.ch.ctrlrest1.models;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
@@ -15,7 +14,7 @@ public class Message {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "creator_id")  // Ajoute le nom exact de la colonne
     private Long creatorId;
 
     @ManyToOne
@@ -26,7 +25,6 @@ public class Message {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-   
     public Long getId() {
         return id;
     }

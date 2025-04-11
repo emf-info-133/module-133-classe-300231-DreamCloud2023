@@ -158,7 +158,7 @@ function deletePost(postId, successCallback, errorCallback) {
  */
 function deleteUser(user, successCallback, errorCallback) {
     $.ajax({
-        url: '/api/gateway/deleteUser',
+        url: 'http://localhost:8080/api/gateway/deleteUser',
         type: 'DELETE',
         contentType: 'application/json',
         data: JSON.stringify(user),
@@ -184,5 +184,57 @@ function getUsernameById(userId) {
     });
 }
 
+function getAllUsers(successCallback, errorCallback) {
+    $.ajax({
+        url: 'http://localhost:8080/api/gateway/getAllUsers', // Remplace par l'URL correcte
+        type: 'GET',
+        success: function(response) {
+            // Si la requête réussit, on appelle le callback de succès
+            successCallback(response);
+        },
+        error: function(xhr, status, error) {
+            // En cas d'erreur, on appelle le callback d'erreur
+            errorCallback(error);
+        }
+    });
+}
 
+function banUser(data, successCallback, errorCallback) {
+    $.ajax({
+        url: "http://localhost:8080/api/gateway/banUser",  // Remplace par l'URL correcte pour bannir un utilisateur
+        type: "POST",
+        data: JSON.stringify(data),  // Envoi des données (nom d'utilisateur et raison)
+        contentType: "application/json",  // Assurez-vous que l'API accepte le format JSON
+        success: function(response) {
+            successCallback(response);  // Appeler la fonction de succès avec la réponse
+        },
+        error: function(xhr, status, error) {
+            console.error("Erreur lors du bannissement de l'utilisateur:", error);
+            errorCallback();  // Appeler la fonction d'erreur
+        }
+    });
+}
+
+/**
+ * Méthode permettant de bannir un utilisateur
+ * 
+ * @param {*} data Données contenant le nom d'utilisateur et la raison du bannissement
+ * @param {*} successCallback 
+ * @param {*} errorCallback 
+ */
+function banUser(data, successCallback, errorCallback) {
+    $.ajax({
+        url: "http://localhost:8080/api/gateway/banUser",  // Remplace par l'URL correcte pour bannir un utilisateur
+        type: "POST",
+        data: JSON.stringify(data),  // Envoi des données (nom d'utilisateur et raison)
+        contentType: "application/json",  // Assurez-vous que l'API accepte le format JSON
+        success: function(response) {
+            successCallback(response);  // Appeler la fonction de succès avec la réponse
+        },
+        error: function(xhr, status, error) {
+            console.error("Erreur lors du bannissement de l'utilisateur:", error);
+            errorCallback();  // Appeler la fonction d'erreur
+        }
+    });
+}
 

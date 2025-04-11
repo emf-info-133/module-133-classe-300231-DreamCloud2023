@@ -3,6 +3,7 @@ package doudix.ch.ctrlrest1.services;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import doudix.ch.ctrlrest1.dto.PostDTO;
+import doudix.ch.ctrlrest1.dto.UserDTO;
 import doudix.ch.ctrlrest1.models.Message;
 import doudix.ch.ctrlrest1.models.MessageRepository;
 import doudix.ch.ctrlrest1.models.Post;
@@ -142,4 +144,15 @@ public class Rest1Service {
         return user != null ? user.getUsername() : null;
     }
 
+    // Méthode pour récupérer tous les utilisateurs
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();  // Récupère tous les utilisateurs depuis la base de données
+        List<UserDTO> userDTOs = users.stream().map(user -> {
+           
+            return new UserDTO(user.getId(), user.getUsername(), user.getPassword(), user.isAdmin());
+        }).collect(Collectors.toList());
+        return userDTOs;
+    }
 }
+
+
