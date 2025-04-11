@@ -1,5 +1,7 @@
 $(document).ready(function () {
   // Vérifier si l'utilisateur est connecté et récupérer ses données
+
+  sessionStorage.removeItem("Post");
   if (!sessionStorage.getItem("loggedUser")) {
       window.location.href = "login.html";
       return;
@@ -29,10 +31,8 @@ $(document).ready(function () {
   // Charger tous les posts
   getAllPosts(
       function (posts) {
-          console.log('Posts chargés:', posts);  // Log de tous les posts
+          console.log('Posts chargés:', posts);
           allPosts = posts;
-
-          // Directement utiliser les posts sans récupérer le nom de l'utilisateur
           displayPosts(allPosts);
       },
       function () {
@@ -43,7 +43,7 @@ $(document).ready(function () {
   // Afficher le nom de l'utilisateur connecté
   $("#logged-username").text(sessionStorage.getItem("loggedUser"));
 
-  // Fonction pour afficher les posts
+  // Recherche dynamique
   $("#searchInput").on("input", function () {
       const searchTerm = $(this).val().toLowerCase();
       const filteredPosts = allPosts.filter(post =>
@@ -56,6 +56,7 @@ $(document).ready(function () {
       displayPosts(allPosts);
   });
 
+  // Filtrage par catégorie
   $(".sidebar ul li").on("click", function () {
       const selectedCategory = $(this).text().trim().toLowerCase();
       const filteredPosts = allPosts.filter(post =>
@@ -64,7 +65,7 @@ $(document).ready(function () {
       displayPosts(filteredPosts);
   });
 
-  // Fonction pour afficher les posts dans la section principale
+  // Fonction pour afficher les posts
   async function displayPosts(posts) {
       const $postList = $(".post-list");
       $postList.empty();
@@ -75,38 +76,41 @@ $(document).ready(function () {
       }
 
       for (let post of posts) {
-          const username = post.creatorUsername || "Auteur inconnu";  // Utiliser "Auteur inconnu" si le nom est manquant
-
+          const username = post.creatorUsername || "Auteur inconnu";
           const postHtml = `
               <a href="#" class="post ${post.couleur}" data-id="${post.postId}">
-              <div class="thumbnail">
-                  <img src="${post.imageUrl}" alt="Image" style="width: 100px; height: 80px; object-fit: cover;">
-              </div>
-              <div class="details">
-                  <h3>${post.title}</h3>
-                  <p>${post.description}</p>
-                  <span class="category-tag">${post.category}</span>
-              </div>
-              <div class="author">By ${username}</div>
+                  <div class="thumbnail">
+                      <img src="${post.imageUrl}" alt="Image" style="width: 100px; height: 80px; object-fit: cover;">
+                  </div>
+                  <div class="details">
+                      <h3>${post.title}</h3>
+                      <p>${post.description}</p>
+                      <span class="category-tag">${post.category}</span>
+                  </div>
+                  <div class="author">By ${username}</div>
               </a>`;
-
           $postList.append(postHtml);
       }
   }
 
-  // Gérer la navigation vers la discussion d'un post
+  // Gérer le clic sur un post pour stocker et rediriger
   $(document).on("click", ".post", function (e) {
-      e.preventDefault(); // empêche le saut immédiat
+      e.preventDefault();
       const postId = $(this).data("id");
-      localStorage.setItem("selectedPostId", String(postId));
-      window.location.href = "discussion.html"; // on navigue seulement après avoir stocké
+
+      // Trouver le post complet
+      const currentPost = allPosts.find(p => p.postId === postId);
+      if (currentPost) {
+          sessionStorage.setItem("Post", JSON.stringify(currentPost)); // Stockage dans sessionStorage
+      }
+
+      window.location.href = "discussion.html"; // Redirection
   });
 
-  // Logique pour le modal de bannissement
+  // Gérer le modal de bannissement
   $("#openBanModal").click(function () {
       $("#banModal").fadeIn();
 
-      // Utiliser la liste des utilisateurs déjà récupérée lors du chargement de la page
       const $select = $("#userSelect").empty();
       allUsers.forEach(u => {
           $select.append(`<option value="${u.username}">${u.username}</option>`);
@@ -118,27 +122,27 @@ $(document).ready(function () {
   });
 
   $("#banUserBtn").click(function () {
-    const username = $("#userSelect").val(); // Nom d'utilisateur à bannir
-    const remarque = $("#banReason").val(); // Raison du bannissement
+      const username = $("#userSelect").val();
+      const remarque = $("#banReason").val();
 
-    if (!remarque.trim()) {
-        alert("Merci d'ajouter une remarque.");
-        return;
-    }
+      if (!remarque.trim()) {
+          alert("Merci d'ajouter une remarque.");
+          return;
+      }
 
-    // Bannir l'utilisateur
-    banUser({ username, remarque }, function () {
-        alert("Utilisateur banni avec succès !");
+      // Bannir l'utilisateur
+      banUser({ username, remarque }, function () {
+          alert("Utilisateur banni avec succès !");
 
-        // Une fois l'utilisateur banni, on le supprime
-        deleteUser({ username }, function () {
-            alert("Utilisateur supprimé avec succès !");
-            $("#banModal").fadeOut();
-        }, function () {
-            alert("Erreur lors de la suppression de l'utilisateur.");
-        });
-    }, function () {
-        alert("Erreur lors du bannissement.");
-    });
-});
+          // Supprimer ensuite l'utilisateur
+          deleteUser({ username }, function () {
+              alert("Utilisateur supprimé avec succès !");
+              $("#banModal").fadeOut();
+          }, function () {
+              alert("Erreur lors de la suppression de l'utilisateur.");
+          });
+      }, function () {
+          alert("Erreur lors du bannissement.");
+      });
+  });
 });
