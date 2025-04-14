@@ -41,7 +41,7 @@ $(document).ready(function () {
     }
 
     // Dernier message en haut
-    messages.reverse().forEach(msg => {
+    messages.forEach(msg => {
       const comment = `
         <div class="comment">
           <span class="username">${msg.creatorUsername || msg.creatorId} :</span>
