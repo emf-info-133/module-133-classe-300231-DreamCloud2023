@@ -6,7 +6,6 @@ public class UserDTO {
     private String password;
     private boolean isAdmin;
 
-    // Constructeurs
     public UserDTO() {}
 
     public UserDTO(Long id, String username, String password, boolean isAdmin) {
@@ -16,7 +15,6 @@ public class UserDTO {
         this.isAdmin = isAdmin;
     }
 
-    // Getters et Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -27,5 +25,6 @@ public class UserDTO {
     public void setPassword(String password) { this.password = password; }
 
     public boolean isAdmin() { return isAdmin; }
-    public void setIsAdmin(boolean isAdmin) { this.isAdmin = isAdmin; }
+    public void setAdmin(boolean isAdmin) { this.isAdmin = isAdmin; }
 }
+
