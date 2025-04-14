@@ -5,10 +5,10 @@ import doudix.ch.apigateway.dto.*;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.apache.logging.log4j.message.Message;
 import org.springframework.core.ParameterizedTypeReference;
 
 @RestController
@@ -21,37 +21,50 @@ public class GatewayController {
 
     // Connexion
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> login(@RequestBody UserDTO userDTO, HttpSession session) {
         String url = REST1_BASE_URL + "/login";
-        return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(userDTO), String.class);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(userDTO), String.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            session.setAttribute("username", userDTO.getUsername());
+        }
+
+        return response;
     }
 
     // Déconnexion
     @PostMapping("/logout")
-    public ResponseEntity<String> logout() {
-        String url = REST1_BASE_URL + "/logout";
-        return restTemplate.exchange(url, HttpMethod.POST, null, String.class);
+    public ResponseEntity<String> logout(HttpSession session) {
+        String username = (String) session.getAttribute("username");
+
+        if (username != null) {
+            session.invalidate();
+            String url = REST1_BASE_URL + "/logout";
+            return restTemplate.exchange(url, HttpMethod.POST, null, String.class);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in.");
+        }
     }
 
-    // Ajouter un utilisateur
+    // Exemple : ajouter un post uniquement si connecté
+    @PostMapping("/addPost")
+    public ResponseEntity<String> addPost(@RequestBody PostDTO postDTO, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+
+        if (username == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to add a post.");
+        }
+
+        String url = REST1_BASE_URL + "/addPost";
+        return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(postDTO), String.class);
+    }
+
+    // Le reste de ton code reste identique sauf si tu veux aussi protéger d'autres endpoints
+
     @PostMapping("/addUser")
     public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO) {
         String url = REST1_BASE_URL + "/addUser";
         return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(userDTO), String.class);
-    }
-
-    // Ajouter un post
-    @PostMapping("/addPost")
-    public ResponseEntity<String> addPost(@RequestBody PostDTO postDTO) {
-        String url = REST1_BASE_URL + "/addPost";
-        System.out.println("Sout ApiGateway - Check_1 : " + postDTO);
-        System.out.println("CreatorId: " + postDTO.getCreatorId());
-        System.out.println("Title: " + postDTO.getTitle());
-        System.out.println("Description: " + postDTO.getDescription());
-        System.out.println("ImageUrl: " + postDTO.getImageUrl());
-        System.out.println("Category: " + postDTO.getCategory());
-        System.out.println("Couleur: " + postDTO.getCouleur());
-        return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(postDTO), String.class);
     }
 
     @GetMapping("/getUser/{username}")
@@ -60,7 +73,7 @@ public class GatewayController {
             String url = REST1_BASE_URL + "/getUser/" + username;
             return restTemplate.exchange(url, HttpMethod.GET, null, UserDTO.class);
         } catch (Exception e) {
-            e.printStackTrace(); // ← Voir la console Docker du gateway
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
@@ -68,15 +81,9 @@ public class GatewayController {
     @GetMapping("/getPosts")
     public ResponseEntity<List<PostDTO>> getAllPosts() {
         String url = REST1_BASE_URL + "/getPosts";
-        return restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<PostDTO>>() {
-                });
+        return restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<PostDTO>>() {});
     }
 
-    // Ajouter un message
     @PostMapping("/addMsg")
     public ResponseEntity<String> addMessage(@RequestBody MessageDTO messageDTO) {
         String url = REST1_BASE_URL + "/addMsg";
@@ -92,8 +99,7 @@ public class GatewayController {
                     url,
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<List<MessageDTO>>() {
-                    });
+                    new ParameterizedTypeReference<List<MessageDTO>>() {});
             return response;
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,7 +107,6 @@ public class GatewayController {
         }
     }
 
-    // Supprimer un post
     @DeleteMapping("/deletePost")
     public ResponseEntity<String> deletePost(@RequestBody Map<String, Long> requestBody) {
         Long postId = requestBody.get("postId");
@@ -113,14 +118,12 @@ public class GatewayController {
         String url = REST1_BASE_URL + "/deletePost?postId=" + postId;
 
         try {
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
-            return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
+            return restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("An error occurred while calling the target service.");
         }
     }
 
-    // Supprimer un utilisateur
     @DeleteMapping("/deleteUser")
     public ResponseEntity<String> deleteUser(@RequestBody UserDTO userDto) {
         String url = REST1_BASE_URL + "/deleteUserByName";
@@ -129,14 +132,12 @@ public class GatewayController {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<UserDTO> entity = new HttpEntity<>(userDto, headers);
-
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, String.class);
 
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return ResponseEntity.ok("User deleted via gateway");
-            } else {
-                return ResponseEntity.status(response.getStatusCode()).body("Failed to delete user via gateway");
-            }
+            return response.getStatusCode().is2xxSuccessful()
+                    ? ResponseEntity.ok("User deleted via gateway")
+                    : ResponseEntity.status(response.getStatusCode()).body("Failed to delete user via gateway");
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500)
@@ -147,40 +148,18 @@ public class GatewayController {
     @PostMapping("/banUser")
     public ResponseEntity<BanissementDTO> banUser(@RequestBody BanissementDTO banDto) {
         try {
-            // Préparer l'URL du service REST2
-            String url = REST2_BASE_URL + "/banUser"; // Assurez-vous que l'URL correspond bien à votre service REST2
-
-            System.out.println(banDto.getUsername());
-            System.out.println(banDto.getRemarque());
-
-            BanissementDTO banissement = new BanissementDTO(banDto.getUsername(), banDto.getRemarque());
-
-            System.out.println("Check1");
-            // Créer l'entité Http pour envoyer l'objet Banissement
+            String url = REST2_BASE_URL + "/banUser";
             HttpHeaders headers = new HttpHeaders();
-            System.out.println("Check2");
             headers.setContentType(MediaType.APPLICATION_JSON);
-            System.out.println("Check3");
-            HttpEntity<BanissementDTO> requestEntity = new HttpEntity<>(banissement, headers);
-            System.out.println("Check4");
+            HttpEntity<BanissementDTO> requestEntity = new HttpEntity<>(banDto, headers);
 
-            // Faire la requête HTTP POST vers le service REST2
-            ResponseEntity<BanissementDTO> response = restTemplate.exchange(
-                    url,
-                    HttpMethod.POST,
-                    requestEntity,
-                    BanissementDTO.class);
-
-            // Retourner la réponse obtenue
-            System.out.println("Check5");
-            return response;
+            return restTemplate.exchange(url, HttpMethod.POST, requestEntity, BanissementDTO.class);
         } catch (Exception e) {
-            e.printStackTrace(); // Pour afficher l'exception dans les logs
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
-    // Récupérer tous les bannissements
     @GetMapping("/getBans")
     public ResponseEntity<List<BanissementDTO>> getAllBans() {
         String url = REST2_BASE_URL + "/getBans";
@@ -190,9 +169,7 @@ public class GatewayController {
                     url,
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<List<BanissementDTO>>() {
-                    });
-
+                    new ParameterizedTypeReference<List<BanissementDTO>>() {});
             return ResponseEntity.ok(response.getBody());
 
         } catch (Exception e) {
@@ -204,7 +181,7 @@ public class GatewayController {
     @GetMapping("/getUserById/{userId}")
     public ResponseEntity<String> getUserById(@PathVariable Long userId) {
         String url = REST1_BASE_URL + "/getUserById/" + userId;
-        System.out.println("Id de l'utilisateur : " + userId);
+
         try {
             return restTemplate.exchange(url, HttpMethod.GET, null, String.class);
         } catch (Exception e) {
@@ -212,7 +189,6 @@ public class GatewayController {
         }
     }
 
-    // Récupérer tous les utilisateurs
     @GetMapping("/getAllUsers")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         String url = REST1_BASE_URL + "/getAllUsers";
@@ -222,15 +198,11 @@ public class GatewayController {
                     url,
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<List<UserDTO>>() {
-                    });
-
+                    new ParameterizedTypeReference<List<UserDTO>>() {});
             return ResponseEntity.ok(response.getBody());
-
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
 }

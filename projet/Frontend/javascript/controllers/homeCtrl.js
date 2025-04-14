@@ -2,7 +2,7 @@ $(document).ready(function () {
     // Vérifier si l'utilisateur est connecté et récupérer ses données
     sessionStorage.removeItem("Post");
     if (!sessionStorage.getItem("loggedUser")) {
-      window.location.href = "login.html";
+      //window.location.href = "login.html";
       return;
     }
   
