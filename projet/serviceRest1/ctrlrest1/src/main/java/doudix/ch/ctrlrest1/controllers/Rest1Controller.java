@@ -38,6 +38,7 @@ public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
 }
 
 
+    // Déconnexion
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
         service.logout();

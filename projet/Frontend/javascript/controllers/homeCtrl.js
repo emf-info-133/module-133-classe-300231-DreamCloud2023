@@ -2,23 +2,21 @@ $(document).ready(function () {
     sessionStorage.removeItem("Post");
 
     const loggedUser = sessionStorage.getItem("loggedUser");
+    const isAdmin = sessionStorage.getItem("isAdmin") === "true";
+
     if (!loggedUser) {
         window.location.href = "login.html";
         return;
     }
 
-    const defaultImage = "/projet/Frontend/assets/pas-de-photo.png";
-
-    getUserByUsername(loggedUser, function (user) {
-        if (user.isAdmin) {
-            $(".ban-button").show();
-        } else {
-            $(".ban-button").hide();
-        }
-    }, function () {
-        console.error("Erreur lors de la vérification des droits d'administration.");
+    // Affichage du bouton Ban selon la sessionStorage (ancienne méthode)
+    if (isAdmin) {
+        $(".ban-button").show();
+    } else {
         $(".ban-button").hide();
-    });
+    }
+
+    const defaultImage = "/projet/Frontend/assets/pas-de-photo.png";
 
     let allUsers = [];
     let allPosts = [];
