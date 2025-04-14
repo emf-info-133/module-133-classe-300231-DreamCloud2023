@@ -20,6 +20,7 @@ $(document).ready(function () {
   function displayPost(post) {
     $(".main-post").addClass(post.couleur || "default");
 
+    // Appliquer l'image par défaut si aucune image n'est fournie
     const imageUrl = post.imageUrl && post.imageUrl.trim() !== "" ? post.imageUrl : defaultImage;
     $(".post-image").attr("src", imageUrl);
 
@@ -39,6 +40,7 @@ $(document).ready(function () {
       return;
     }
 
+    // Dernier message en haut
     messages.reverse().forEach(msg => {
       const comment = `
         <div class="comment">
