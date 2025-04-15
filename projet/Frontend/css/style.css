@@ -783,21 +783,21 @@ textarea:focus, input:focus, select:focus {
   margin-left: 20px;
 }
 
-/* Case du post */
 .main-post {
   width: 100%;
-  height: 220px;
+  /* height: 220px; ❌ à retirer */
   border: 2px solid #000;
   padding: 20px;
   border-radius: 12px;
   display: flex;
   gap: 20%;
   box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  align-items: flex-start; /* important pour éviter l'étirement vertical */
 }
 
 .main-post .thumbnail {
   width: 40%;
-  height: 100%;
+  aspect-ratio: 16 / 9; /* rend l’image proportionnelle sans fixer une hauteur */
   overflow: hidden;
   border-radius: 10px;
   flex-shrink: 0;
