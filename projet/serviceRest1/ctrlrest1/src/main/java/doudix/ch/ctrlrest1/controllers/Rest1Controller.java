@@ -85,11 +85,11 @@ public class Rest1Controller {
     // Récupérer tous les utilisateurs
     @GetMapping("/getAllUsers")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> users = service.getAllUsers();  
+        List<UserDTO> users = service.getAllUsers();
         if (!users.isEmpty()) {
-            return ResponseEntity.ok(users); 
+            return ResponseEntity.ok(users);
         } else {
-            return ResponseEntity.status(404).body(null); 
+            return ResponseEntity.status(404).body(null);
         }
     }
 
@@ -115,16 +115,17 @@ public class Rest1Controller {
     public ResponseEntity<List<MessageDTO>> getMessagesByPost(@PathVariable Long postId) {
         List<Message> messages = service.getMessagesByPost(postId);
 
+
         List<MessageDTO> dtos = messages.stream().map(m -> {
             String creatorUsername = service.getUsernameById(m.getCreatorId());
             return new MessageDTO(
-                m.getId(),
-                m.getText(),
-                m.getCreatorId(),
-                creatorUsername,
-                m.getPost().getPostId()
-            );
+                    m.getId(),
+                    m.getText(),
+                    m.getCreatorId(),
+                    creatorUsername,
+                    m.getPost().getPostId());
         }).toList();
+
 
         return ResponseEntity.ok(dtos);
     }

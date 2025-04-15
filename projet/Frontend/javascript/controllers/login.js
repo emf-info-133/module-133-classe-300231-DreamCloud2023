@@ -40,7 +40,7 @@ $(document).ready(function () {
     if (xhr.status === 401) {
       alert("Nom d'utilisateur ou mot de passe incorrect.");
     } else {
-      alert("Erreur serveur : " + xhr.responseText);
+      alert("Erreur serveur : Username ou mot de passse incorrect");
     }
   }
 
