@@ -46,7 +46,7 @@ $(document).ready(function () {
           alert("Post créé avec succès !");
           window.location.href = "home.html";
         }, function (xhr) {
-          alert("Erreur lors de la création du post : " + xhr.responseText);
+          alert("Erreur lors de la création du post");
         });
 
       }, function () {

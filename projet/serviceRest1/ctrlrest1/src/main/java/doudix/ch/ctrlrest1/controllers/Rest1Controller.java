@@ -22,21 +22,20 @@ public class Rest1Controller {
     private Rest1Service service;
 
     @PostMapping("/login")
-public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
-    try {
-        User user = service.login(userDTO.getUsername(), userDTO.getPassword());
-        if (user != null) {
-            UserDTO response = new UserDTO(user.getId(), user.getUsername(), user.getPassword(), user.isAdmin());
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.status(401).body(null);
+    public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
+        try {
+            User user = service.login(userDTO.getUsername(), userDTO.getPassword());
+            if (user != null) {
+                UserDTO response = new UserDTO(user.getId(), user.getUsername(), user.getPassword(), user.isAdmin());
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.status(401).body(null);
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            return ResponseEntity.status(500).body(null);
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-        return ResponseEntity.status(500).body(null);
     }
-}
-
 
     // Déconnexion
     @PostMapping("/logout")
@@ -84,11 +83,11 @@ public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
 
     @GetMapping("/getAllUsers")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> users = service.getAllUsers();  
+        List<UserDTO> users = service.getAllUsers();
         if (!users.isEmpty()) {
-            return ResponseEntity.ok(users); 
+            return ResponseEntity.ok(users);
         } else {
-            return ResponseEntity.status(404).body(null); 
+            return ResponseEntity.status(404).body(null);
         }
     }
 
@@ -97,8 +96,6 @@ public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
         List<PostDTO> dtos = service.getAllPosts();
         return ResponseEntity.ok(dtos);
     }
-
-
 
     // Ajouter un message
     @PostMapping("/addMsg")
@@ -113,21 +110,19 @@ public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
     @GetMapping("/getMessages/{postId}")
     public ResponseEntity<List<MessageDTO>> getMessagesByPost(@PathVariable Long postId) {
         List<Message> messages = service.getMessagesByPost(postId);
-    
+
         List<MessageDTO> dtos = messages.stream().map(m -> {
             String creatorUsername = service.getUsernameById(m.getCreatorId());
             return new MessageDTO(
-                m.getId(),
-                m.getText(),
-                m.getCreatorId(),
-                creatorUsername,
-                m.getPost().getPostId()
-            );
+                    m.getId(),
+                    m.getText(),
+                    m.getCreatorId(),
+                    creatorUsername,
+                    m.getPost().getPostId());
         }).toList();
-    
+
         return ResponseEntity.ok(dtos);
     }
-    
 
     // Méthode pour supprimer un post selon son ID dans le service cible
     @DeleteMapping("/deletePost")
@@ -153,9 +148,9 @@ public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
 
     @GetMapping("/getUserById/{id}")
     public ResponseEntity<String> getUserById(@PathVariable Long id) {
-      
+
         String username = service.getUsernameById(id);
-       
+
         if (username != null) {
             return ResponseEntity.ok(username);
         } else {
