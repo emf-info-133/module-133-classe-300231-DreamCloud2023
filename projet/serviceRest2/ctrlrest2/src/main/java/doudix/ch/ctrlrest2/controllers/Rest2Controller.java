@@ -24,7 +24,12 @@ public class Rest2Controller {
         this.service = service;
     }
 
-    // Bannir un utilisateur
+    /**
+     * Endpoint POST : /banUser
+     * Bannit un utilisateur en sauvegardant son nom + remarque dans la base de données.
+     * Retourne un DTO avec les infos du bannissement.
+     * Gère les erreurs s'il manque des données ou en cas d'erreur serveur.
+     */
     @PostMapping("/banUser")
     public ResponseEntity<BanissementDTO> banUser(@RequestBody Banissement banissement) {
         try {
@@ -46,7 +51,11 @@ public class Rest2Controller {
         }
     }
 
-    // Récupérer la liste des bannissements
+    /**
+     * Endpoint GET : /getBans
+     * Récupère et retourne la liste complète des utilisateurs bannis.
+     * Transforme les entités Banissement en DTO pour sécuriser la réponse.
+     */
     @GetMapping("/getBans")
     public ResponseEntity<List<BanissementDTO>> getAllBans() {
         List<Banissement> bans = service.getAllBans();

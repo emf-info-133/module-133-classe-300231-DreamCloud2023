@@ -94,7 +94,7 @@ public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
 
     @GetMapping("/getPosts")
     public ResponseEntity<List<PostDTO>> getAllPosts() {
-        List<PostDTO> dtos = service.getAllPosts();  // Utiliser le service mis à jour
+        List<PostDTO> dtos = service.getAllPosts();
         return ResponseEntity.ok(dtos);
     }
 
@@ -133,18 +133,16 @@ public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
     @DeleteMapping("/deletePost")
     public ResponseEntity<String> deletePost(@RequestParam Long postId) {
         try {
-            // Appeler la méthode pour supprimer le post selon son ID
-            service.deleteMessagesAndPosts(List.of(postId)); // Supprimer le post et les messages associés
+            service.deleteMessagesAndPosts(List.of(postId));
             return ResponseEntity.ok("Post and associated messages deleted successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("An error occurred while deleting the post and messages.");
         }
     }
 
-    // Supprimer un utilisateur par nom
     @DeleteMapping("/deleteUserByName")
     public ResponseEntity<String> deleteUser(@RequestBody UserDTO userDto) {
-        String username = userDto.getUsername(); // Utilisation du DTO pour récupérer le nom d'utilisateur
+        String username = userDto.getUsername();
         boolean isDeleted = service.deleteUserByName(username);
         if (isDeleted) {
             return ResponseEntity.ok("User deleted");

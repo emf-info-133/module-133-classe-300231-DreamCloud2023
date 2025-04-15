@@ -112,7 +112,7 @@ public class Rest1Service {
     }
 
     public List<Message> getMessagesByPost(Long postId) {
-        return messageRepository.findByPostPostId(postId); // pas besoin d'une liste ici
+        return messageRepository.findByPostPostId(postId);
     }
 
     // Méthode pour supprimer les messages et les posts
