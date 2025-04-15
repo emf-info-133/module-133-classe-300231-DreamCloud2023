@@ -1,14 +1,30 @@
 package doudix.ch.ctrlrest1.dto;
 
+/**
+ * DTO (Data Transfer Object) représentant un utilisateur.
+ * Utilisé pour transférer les données d'un utilisateur entre le backend et le frontend
+ * sans exposer directement l'entité `User`.
+ */
 public class UserDTO {
+
+    // Identifiant unique de l'utilisateur
     private Long id;
+
+    // Nom d'utilisateur (identifiant de connexion)
     private String username;
+
+    // Mot de passe de l'utilisateur
     private String password;
+
+    // Statut administrateur : true si l'utilisateur est un admin
     private boolean isAdmin;
 
-    // Constructeurs
+    // --- Constructeurs ---
+
+    // Constructeur vide (nécessaire pour la sérialisation JSON / Spring)
     public UserDTO() {}
 
+    // Constructeur complet avec tous les champs
     public UserDTO(Long id, String username, String password, boolean isAdmin) {
         this.id = id;
         this.username = username;
@@ -16,7 +32,8 @@ public class UserDTO {
         this.isAdmin = isAdmin;
     }
 
-    // Getters et Setters
+    // --- Getters et Setters ---
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

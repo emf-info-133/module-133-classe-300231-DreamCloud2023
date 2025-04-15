@@ -4,26 +4,37 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+/**
+ * Entité JPA représentant un message posté dans une discussion.
+ * Chaque message est lié à un post.
+ */
 @Entity
 public class Message {
 
+    // Identifiant unique du message (clé primaire)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Contenu du message (champ obligatoire, de type texte long)
     @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
 
-    @Column(nullable = false, name = "creator_id")  // Ajoute le nom exact de la colonne
+    // ID de l'utilisateur qui a créé le message (pas de relation directe avec l'entité User)
+    @Column(nullable = false, name = "creator_id")
     private Long creatorId;
 
+    // Lien vers le post auquel le message est associé (Many-to-One = plusieurs messages peuvent appartenir à un post)
     @ManyToOne
     @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference // Empêche la boucle infinie lors de la sérialisation JSON (post -> messages -> post -> ...)
     private Post post;
 
+    // Date de création automatique (non modifiable après insertion)
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    // --- Getters et Setters ---
 
     public Long getId() {
         return id;

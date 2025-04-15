@@ -2,19 +2,43 @@ package doudix.ch.ctrlrest1.dto;
 
 import java.math.BigInteger;
 
+/**
+ * DTO (Data Transfer Object) représentant un post (publication).
+ * Il permet de transférer les données d'un post entre le backend et le frontend
+ * sans exposer directement l'entité `Post` de la base de données.
+ */
 public class PostDTO {
+
+    // Identifiant unique du post
     private Long id;
+
+    // Identifiant de l'utilisateur qui a créé le post
     private BigInteger creatorId;
-    private String creatorUsername;  // Ajout du nom de l'utilisateur
+
+    // Nom de l'utilisateur créateur (ajouté pour affichage côté client)
+    private String creatorUsername;
+
+    // URL de l'image associée au post
     private String imageUrl;
+
+    // Titre du post
     private String title;
+
+    // Description du post
     private String description;
+
+    // Catégorie du post (ex. : Actu, Humour, Info)
     private String category;
+
+    // Couleur associée au post (pour affichage visuel)
     private String couleur;
 
+    // Constructeur vide requis par Spring/JSON
     public PostDTO() {}
 
-    public PostDTO(Long id, BigInteger creatorId, String creatorUsername, String imageUrl, String title, String description, String category, String couleur) {
+    // Constructeur complet
+    public PostDTO(Long id, BigInteger creatorId, String creatorUsername, String imageUrl,
+                   String title, String description, String category, String couleur) {
         this.id = id;
         this.creatorId = creatorId;
         this.creatorUsername = creatorUsername;
@@ -25,10 +49,12 @@ public class PostDTO {
         this.couleur = couleur;
     }
 
-    // Getters et setters
+    // --- Getters et Setters ---
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
+    // Méthode alternative pour compatibilité avec d'autres noms (postId)
     public Long getPostId() { return id; }
     public void setPostId(Long postId) { this.id = postId; }
 

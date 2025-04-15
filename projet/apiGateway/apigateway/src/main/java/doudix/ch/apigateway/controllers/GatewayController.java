@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 
+// Point d'entrée principal du Gateway qui redirige toutes les requêtes vers REST1 ou REST2 selon les besoins.
 @RestController
 @RequestMapping("/api/gateway")
 public class GatewayController {
@@ -19,26 +20,28 @@ public class GatewayController {
     private final String REST1_BASE_URL = "http://restctrl1:8080/api/rest1";
     private final String REST2_BASE_URL = "http://restctrl2:8080/api/rest2";
 
-    // Connexion
+    // Authentifie un utilisateur en appelant REST1 (/login), 
+    // puis sauvegarde son nom d'utilisateur dans la session HTTP.
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO, HttpSession session) {
         String url = REST1_BASE_URL + "/login";
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(userDTO), String.class);
 
         if (response.getStatusCode().is2xxSuccessful()) {
-            session.setAttribute("username", userDTO.getUsername());
+            session.setAttribute("username", userDTO.getUsername()); // session HTTP créée ici
         }
 
         return response;
     }
 
-    // Déconnexion
+    // Déconnecte un utilisateur en supprimant la session côté serveur 
+    // et en appelant REST1 pour gérer la partie logout.
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session) {
         String username = (String) session.getAttribute("username");
 
         if (username != null) {
-            session.invalidate();
+            session.invalidate(); // détruit la session
             String url = REST1_BASE_URL + "/logout";
             return restTemplate.exchange(url, HttpMethod.POST, null, String.class);
         } else {
@@ -46,7 +49,8 @@ public class GatewayController {
         }
     }
 
-    // Exemple : ajouter un post uniquement si connecté
+    // Permet à un utilisateur connecté d’ajouter un post.
+    // Si aucune session active n’est détectée, l’opération est refusée.
     @PostMapping("/addPost")
     public ResponseEntity<String> addPost(@RequestBody PostDTO postDTO, HttpSession session) {
         String username = (String) session.getAttribute("username");
@@ -59,14 +63,14 @@ public class GatewayController {
         return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(postDTO), String.class);
     }
 
-    // Le reste de ton code reste identique sauf si tu veux aussi protéger d'autres endpoints
-
+    // Inscription d’un nouvel utilisateur en appelant REST1.
     @PostMapping("/addUser")
     public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO) {
         String url = REST1_BASE_URL + "/addUser";
         return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(userDTO), String.class);
     }
 
+    // Récupère les infos d’un utilisateur en appelant REST1 via son username.
     @GetMapping("/getUser/{username}")
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
         try {
@@ -78,27 +82,28 @@ public class GatewayController {
         }
     }
 
+    // Récupère tous les posts disponibles dans le microservice REST1.
     @GetMapping("/getPosts")
     public ResponseEntity<List<PostDTO>> getAllPosts() {
         String url = REST1_BASE_URL + "/getPosts";
         return restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<PostDTO>>() {});
     }
 
+    // Ajoute un message à un post (discussion) via REST1.
     @PostMapping("/addMsg")
     public ResponseEntity<String> addMessage(@RequestBody MessageDTO messageDTO) {
         String url = REST1_BASE_URL + "/addMsg";
         return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(messageDTO), String.class);
     }
 
+    // Récupère tous les messages liés à un post donné (discussion), via son ID.
     @GetMapping("/getMessages/{postId}")
     public ResponseEntity<List<MessageDTO>> getMessagesByPost(@PathVariable Long postId) {
         String url = REST1_BASE_URL + "/getMessages/" + postId;
 
         try {
             ResponseEntity<List<MessageDTO>> response = restTemplate.exchange(
-                    url,
-                    HttpMethod.GET,
-                    null,
+                    url, HttpMethod.GET, null,
                     new ParameterizedTypeReference<List<MessageDTO>>() {});
             return response;
         } catch (Exception e) {
@@ -107,6 +112,7 @@ public class GatewayController {
         }
     }
 
+    // Supprime un post et ses messages associés via REST1, à partir de son ID.
     @DeleteMapping("/deletePost")
     public ResponseEntity<String> deletePost(@RequestBody Map<String, Long> requestBody) {
         Long postId = requestBody.get("postId");
@@ -124,6 +130,7 @@ public class GatewayController {
         }
     }
 
+    // Supprime un utilisateur via REST1, à partir du username passé dans un UserDTO.
     @DeleteMapping("/deleteUser")
     public ResponseEntity<String> deleteUser(@RequestBody UserDTO userDto) {
         String url = REST1_BASE_URL + "/deleteUserByName";
@@ -145,6 +152,7 @@ public class GatewayController {
         }
     }
 
+    // Envoie les infos d’un utilisateur à bannir au microservice REST2.
     @PostMapping("/banUser")
     public ResponseEntity<BanissementDTO> banUser(@RequestBody BanissementDTO banDto) {
         try {
@@ -160,15 +168,14 @@ public class GatewayController {
         }
     }
 
+    // Récupère tous les utilisateurs bannis depuis REST2.
     @GetMapping("/getBans")
     public ResponseEntity<List<BanissementDTO>> getAllBans() {
         String url = REST2_BASE_URL + "/getBans";
 
         try {
             ResponseEntity<List<BanissementDTO>> response = restTemplate.exchange(
-                    url,
-                    HttpMethod.GET,
-                    null,
+                    url, HttpMethod.GET, null,
                     new ParameterizedTypeReference<List<BanissementDTO>>() {});
             return ResponseEntity.ok(response.getBody());
 
@@ -178,6 +185,7 @@ public class GatewayController {
         }
     }
 
+    // Récupère le nom d’un utilisateur via son ID en appelant REST1.
     @GetMapping("/getUserById/{userId}")
     public ResponseEntity<String> getUserById(@PathVariable Long userId) {
         String url = REST1_BASE_URL + "/getUserById/" + userId;
@@ -189,15 +197,14 @@ public class GatewayController {
         }
     }
 
+    // Récupère tous les utilisateurs depuis le microservice REST1.
     @GetMapping("/getAllUsers")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         String url = REST1_BASE_URL + "/getAllUsers";
 
         try {
             ResponseEntity<List<UserDTO>> response = restTemplate.exchange(
-                    url,
-                    HttpMethod.GET,
-                    null,
+                    url, HttpMethod.GET, null,
                     new ParameterizedTypeReference<List<UserDTO>>() {});
             return ResponseEntity.ok(response.getBody());
         } catch (Exception e) {

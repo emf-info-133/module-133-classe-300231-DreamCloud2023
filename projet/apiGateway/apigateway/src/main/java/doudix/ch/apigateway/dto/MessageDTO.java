@@ -1,15 +1,34 @@
 package doudix.ch.apigateway.dto;
 
+/**
+ * DTO (Data Transfer Object) utilisé pour échanger les données liées à un message
+ * entre le frontend, le Gateway et le microservice REST1.
+ *
+ * Il permet de structurer les informations d'un message posté dans une discussion.
+ */
 public class MessageDTO {
+
+    // Identifiant unique du message
     private Long id;
+
+    // Contenu textuel du message
     private String text;
+
+    // ID de l'utilisateur qui a écrit le message
     private Long creatorId;
-    private String creatorUsername; 
+
+    // Nom d'utilisateur (en clair) du créateur du message (utile pour l'affichage frontend)
+    private String creatorUsername;
+
+    // ID du post auquel ce message est lié
     private Long postId;
 
-    // Constructeurs
+    // ----------- Constructeurs -----------
+
+    // Constructeur vide nécessaire pour les frameworks (ex. : lors de la désérialisation JSON)
     public MessageDTO() {}
 
+    // Constructeur complet avec tous les champs
     public MessageDTO(Long id, String text, Long creatorId, String creatorUsername, Long postId) {
         this.id = id;
         this.text = text;
@@ -18,7 +37,8 @@ public class MessageDTO {
         this.postId = postId;
     }
 
-    // Getters et Setters
+    // ----------- Getters et Setters -----------
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

@@ -6,39 +6,46 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
+/**
+ * Représente un Post dans l'application.
+ * Chaque post contient un auteur (creatorId), un titre, une description, une image, une catégorie, une couleur,
+ * et peut contenir plusieurs messages/commentaires.
+ */
 @Entity
 public class Post {
+
+    // Clé primaire (identifiant unique du post)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     @Column(name = "id")
     private Long postId;
 
+    // ID de l'utilisateur qui a créé ce post
     private BigInteger creatorId;
 
+    // URL de l’image du post (peut être une image externe ou base64), stockée en LONGTEXT
     @Column(name = "imageUrl", columnDefinition = "LONGTEXT")
     private String imageUrl;
-    private String title;
-    private String description;
+
+    private String title;          // Titre du post
+    private String description;    // Description du post
+
     @Column(name = "category")
-    private String category;
+    private String category;       // Catégorie du post (ex : "news", "humour", etc.)
 
     @Column(name = "couleur")
-    private String couleur;
+    private String couleur;        // Couleur utilisée pour styliser le post (ex: "green", "blue", etc.)
 
-    @OneToMany(mappedBy = "post")
-    @JsonManagedReference
+    // Liste des messages liés à ce post (relation 1-to-many)
+    @OneToMany(mappedBy = "post") // "mappedBy" indique que l’attribut "post" dans Message est le côté propriétaire
+    @JsonManagedReference          // Permet d’éviter une boucle infinie lors de la sérialisation JSON avec les messages
     private List<Message> messages;
 
-    // Getters et setters
+    // -------------------- Getters & Setters --------------------
 
+    // On précise le nom dans le JSON pour correspondre à l’attribut utilisé côté frontend (postId)
     @JsonProperty("postId")
     public Long getPostId() {
         return postId;
@@ -46,14 +53,6 @@ public class Post {
 
     public void setPostId(Long postId) {
         this.postId = postId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public BigInteger getCreatorId() {
@@ -70,6 +69,14 @@ public class Post {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {

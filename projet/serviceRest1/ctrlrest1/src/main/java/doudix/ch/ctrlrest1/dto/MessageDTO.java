@@ -1,15 +1,30 @@
 package doudix.ch.ctrlrest1.dto;
 
+/**
+ * DTO (Data Transfer Object) représentant un message échangé entre frontend et backend.
+ * Il transporte les données nécessaires sans exposer directement l'entité JPA.
+ */
 public class MessageDTO {
+
+    // Identifiant unique du message
     private Long id;
+
+    // Contenu textuel du message
     private String text;
+
+    // ID de l'utilisateur qui a écrit le message
     private Long creatorId;
-    private String creatorUsername; // 👈 nouveau champ
+
+    // Nom d'utilisateur de l'auteur du message (ajouté pour affichage dans le front)
+    private String creatorUsername;
+
+    // ID du post auquel ce message est rattaché
     private Long postId;
 
-    // Constructeurs
+    // Constructeur vide requis pour la désérialisation JSON
     public MessageDTO() {}
 
+    // Constructeur principal
     public MessageDTO(Long id, String text, Long creatorId, String creatorUsername, Long postId) {
         this.id = id;
         this.text = text;
@@ -18,7 +33,8 @@ public class MessageDTO {
         this.postId = postId;
     }
 
-    // Getters et Setters
+    // --- Getters et Setters ---
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

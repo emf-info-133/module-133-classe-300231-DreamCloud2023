@@ -3,35 +3,39 @@ package doudix.ch.ctrlrest1.models;
 import jakarta.persistence.*;
 import java.util.List;
 
+/**
+ * Représente un utilisateur dans l'application.
+ * Cette entité est liée à la table "Users" dans la base de données.
+ */
 @Entity
 @Table(name = "Users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;  // Identifiant unique généré automatiquement
 
-    private String username;
-    private String password;
+    private String username;  // Nom d'utilisateur
+    private String password;  // Mot de passe de l'utilisateur
 
     @Column(name = "is_admin")
-    private boolean isAdmin;
+    private boolean isAdmin;  // Statut administrateur (true ou false)
 
-    @OneToMany(mappedBy = "creatorId", cascade = CascadeType.ALL)  // Ajoute la suppression en cascade ici
-    private List<Message> messages;
+    @OneToMany(mappedBy = "creatorId", cascade = CascadeType.ALL)
+    private List<Message> messages;  // Liste des messages écrits par l'utilisateur
 
-    // Constructeur par défaut
-    public User() {
-    }
+    // Constructeur sans paramètre requis par JPA
+    public User() {}
 
-    // Constructeur avec paramètres
+    // Constructeur personnalisé pour initialiser les champs
     public User(String username, String password, boolean isAdmin) {
         this.username = username;
         this.password = password;
         this.isAdmin = isAdmin;
     }
 
-    // Getters et Setters
+    // -------------------- Getters --------------------
+
     public Long getId() {
         return id;
     }
@@ -52,9 +56,7 @@ public class User {
         return messages;
     }
 
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
+    // -------------------- Setters --------------------
 
     public void setUsername(String username) {
         this.username = username;
@@ -68,7 +70,11 @@ public class User {
         this.isAdmin = isAdmin;
     }
 
-    // Méthode toString
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
+    // Méthode toString utile pour afficher les infos d'un utilisateur dans la console
     @Override
     public String toString() {
         return "User{id=" + id + ", username='" + username + "', password='" + password + "'}";
